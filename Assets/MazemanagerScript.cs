@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-enum Chords{
+public enum Chords{
 	A,
 	Am,
 	A7,
