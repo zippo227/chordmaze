@@ -18,12 +18,6 @@ public class GuitarManager : MonoBehaviour {
 		}
 	}
 
-	
-	/* GuitarManager stores the current chord progression as a List of chordnames(enum)
-	 * and stores a dictionary to convert from enum to chord(class)*/
-
-	//GuitarManager also stores all the strings and toggles
-
 	[System.Serializable]
 	public class ChordObject
 	{
@@ -49,9 +43,17 @@ public class GuitarManager : MonoBehaviour {
 		
 	}
 
-	public List<string> chordProgression;
+	/* GuitarManager stores the current chord progression as a List of chordnames(enum)
+	 * and stores a dictionary to convert from enum to chord(class)*/
+	
+	//GuitarManager also stores all the strings and toggles
 
+	public List<string> chordProgression;
 	Dictionary<string, ChordObject> chordDictionary = new Dictionary<string, ChordObject> ();
+
+	//these are references to the toggles and sliders that make up the guitar.
+	public UIToggle[] guitarStringsToPlay;
+	public UISlider[] strings;
 
 	void Awake()
 	{
@@ -147,6 +149,25 @@ public class GuitarManager : MonoBehaviour {
 		tempChordObj.setChord(3,true,3,true,0,true,0,true,1,true,3,true);
 		chordDictionary.Add(tempChord, tempChordObj);
 
+	}
+
+	public void playChord()
+	{
+		StartCoroutine ("playNotes");
+		
+	}
+	
+	IEnumerator playNotes()
+	{
+		for(int i = guitarStringsToPlay.Length-1; i>=0; i--)
+		{
+			if (guitarStringsToPlay[i].value)
+			{
+				strings[i].GetComponent<NoteManager>().PlayMyNote();
+				
+			}
+			yield return new WaitForSeconds(0.05f);
+		}
 	}
 
 

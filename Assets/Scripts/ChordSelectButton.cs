@@ -9,6 +9,9 @@ public class ChordSelectButton : MonoBehaviour
 	public UIToggle[] myToggles;
 	public bool[] playString;
 
+	public UILabel nameBox;
+	public string chordName;
+
 	public ChordButton playChordButton;
 
 	public void setToChord()
@@ -24,6 +27,8 @@ public class ChordSelectButton : MonoBehaviour
 			//set Toggle to the value designated by this chord
 			myToggles[i].value = playString[i];
 		}
+
+		nameBox.text = chordName;
 
 		playChordButton.playChord ();
 	}
