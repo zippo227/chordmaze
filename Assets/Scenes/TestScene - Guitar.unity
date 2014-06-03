@@ -3043,6 +3043,7 @@ GameObject:
   - 114: {fileID: 245110754}
   - 114: {fileID: 245110753}
   - 65: {fileID: 245110752}
+  - 114: {fileID: 245110755}
   m_Layer: 9
   m_Name: AddToChordProgression
   m_TagString: Untagged
@@ -3150,6 +3151,17 @@ MonoBehaviour:
   mAtlas: {fileID: 11400000, guid: 62adb30369acbf943a67cee0f69267a3, type: 2}
   mSpriteName: Button
   mFillCenter: 1
+--- !u!114 &245110755
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 245110750}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca680d6394a464dd2acaac0180718402, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &255526951
 Prefab:
   m_ObjectHideFlags: 0
@@ -3730,6 +3742,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8566e8afc21e7441db7f4df35052afd0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  chordProgression: 
 --- !u!1 &311473205
 GameObject:
   m_ObjectHideFlags: 0
@@ -6452,13 +6465,13 @@ MonoBehaviour:
   updateAnchors: 1
   mColor: {r: 0, g: 0, b: 0, a: 1}
   mPivot: 4
-  mWidth: 1021
+  mWidth: 721
   mHeight: 720
   mDepth: -10
   autoResizeBoxCollider: 0
   hideIfOffScreen: 0
   keepAspectRatio: 0
-  aspectRatio: 1.41805553
+  aspectRatio: 1.00138891
   mType: 1
   mFillDirection: 4
   mFillAmount: 1
@@ -16304,13 +16317,13 @@ MonoBehaviour:
   updateAnchors: 1
   mColor: {r: .343283594, g: .343283594, b: .343283594, a: .360784322}
   mPivot: 4
-  mWidth: 1021
+  mWidth: 721
   mHeight: 720
   mDepth: 0
   autoResizeBoxCollider: 0
   hideIfOffScreen: 0
   keepAspectRatio: 0
-  aspectRatio: 1.41805553
+  aspectRatio: 1.00138891
   mType: 2
   mFillDirection: 4
   mFillAmount: 1
