@@ -40,6 +40,16 @@ public class GuitarManager : MonoBehaviour {
 			stringSettings[5] = s5; 
 			playStringSettings[5] = b5;
 		}
+
+		public int[] getStrings()
+		{
+			return stringSettings;
+		}
+
+		public bool[] getStringSettings()
+		{
+			return playStringSettings;
+		}
 		
 	}
 
@@ -49,7 +59,7 @@ public class GuitarManager : MonoBehaviour {
 	//GuitarManager also stores all the strings and toggles
 
 	public List<string> chordProgression;
-	Dictionary<string, ChordObject> chordDictionary = new Dictionary<string, ChordObject> ();
+	public Dictionary<string, ChordObject> chordDictionary = new Dictionary<string, ChordObject> ();
 
 	//these are references to the toggles and sliders that make up the guitar.
 	public UIToggle[] guitarStringsToPlay;
@@ -59,96 +69,129 @@ public class GuitarManager : MonoBehaviour {
 	{
 		mInstance = this;
 		setupDictionary ();
-
 	}
 
 	void setupDictionary()
 	{
+		ChordObject tempChordObj;
 		string tempChord = "A";
-		ChordObject tempChordObj = new ChordObject();
+		tempChordObj = new ChordObject();
 		tempChordObj.setChord(0,true,2,true,2,true,2,true,0,true,0,true);
 		chordDictionary.Add(tempChord, tempChordObj);
 
 		tempChord = "A7";
+		tempChordObj = new ChordObject();
 		tempChordObj.setChord(0,true,2,true,2,true,2,true,0,true,0,true);
 		chordDictionary.Add(tempChord, tempChordObj);
 
 		tempChord = "Am";
+		tempChordObj = new ChordObject();
 		tempChordObj.setChord(0,true,1,true,2,true,2,true,0,true,0,true);
 		chordDictionary.Add(tempChord, tempChordObj);
 
 		tempChord = "B";
+		tempChordObj = new ChordObject();
 		tempChordObj.setChord(2,true,4,true,4,true,4,true,2,true,0,false);
 		chordDictionary.Add(tempChord, tempChordObj);
 
 		tempChord = "B7";
+		tempChordObj = new ChordObject();
 		tempChordObj.setChord(2,true,0,true,2,true,1,true,2,true,0,false);
 		chordDictionary.Add(tempChord, tempChordObj);
 
 		tempChord = "Bm";
+		tempChordObj = new ChordObject();
 		tempChordObj.setChord(2,true,3,true,4,true,4,true,2,true,0,false);
 		chordDictionary.Add(tempChord, tempChordObj);
 
 		tempChord = "C";
+		tempChordObj = new ChordObject();
 		tempChordObj.setChord(0,true,1,true,0,true,2,true,3,true,0,false);
 		chordDictionary.Add(tempChord, tempChordObj);
 
 		tempChord = "C7";
+		tempChordObj = new ChordObject();
 		tempChordObj.setChord(0,true,1,true,3,true,2,true,3,true,0,false);
 		chordDictionary.Add(tempChord, tempChordObj);
 
 		tempChord = "Cm";
+		tempChordObj = new ChordObject();
 		tempChordObj.setChord(3,true,4,true,5,true,5,true,0,false,0,false);
 		chordDictionary.Add(tempChord, tempChordObj);
 
 		tempChord = "D";
+		tempChordObj = new ChordObject();
 		tempChordObj.setChord(2,true,3,true,2,true,0,true,0,false,0,false);
 		chordDictionary.Add(tempChord, tempChordObj);
 
 		tempChord = "D7";
+		tempChordObj = new ChordObject();
 		tempChordObj.setChord(2,true,1,true,2,true,0,true,0,false,0,false);
 		chordDictionary.Add(tempChord, tempChordObj);
 
 		tempChord = "Dm";
+		tempChordObj = new ChordObject();
 		tempChordObj.setChord(1,true,3,true,2,true,0,true,0,false,0,false);
 		chordDictionary.Add(tempChord, tempChordObj);
 
 		tempChord = "E";
+		tempChordObj = new ChordObject();
 		tempChordObj.setChord(0,true,0,true,1,true,2,true,2,true,0,true);
 		chordDictionary.Add(tempChord, tempChordObj);
 
 		tempChord = "E7";
+		tempChordObj = new ChordObject();
 		tempChordObj.setChord(0,true,0,true,1,true,0,true,2,true,0,true);
 		chordDictionary.Add(tempChord, tempChordObj);
 
 		tempChord = "Em";
+		tempChordObj = new ChordObject();
 		tempChordObj.setChord(0,true,0,true,0,true,2,true,2,true,0,true);
 		chordDictionary.Add(tempChord, tempChordObj);
 
 		tempChord = "F";
+		tempChordObj = new ChordObject();
 		tempChordObj.setChord(1,true,1,true,2,true,3,true,0,true,0,false);
 		chordDictionary.Add(tempChord, tempChordObj);
 
 		tempChord = "F7";
+		tempChordObj = new ChordObject();
 		tempChordObj.setChord(1,true,4,true,2,true,3,true,0,true,0,false);
 		chordDictionary.Add(tempChord, tempChordObj);
 
 		tempChord = "Fm";
+		tempChordObj = new ChordObject();
 		tempChordObj.setChord(1,true,1,true,3,true,0,true,0,true,0,false);
 		chordDictionary.Add(tempChord, tempChordObj);
 
 		tempChord = "G";
+		tempChordObj = new ChordObject();
 		tempChordObj.setChord(3,true,0,true,0,true,0,true,2,true,3,true);
 		chordDictionary.Add(tempChord, tempChordObj);
 
 		tempChord = "G7";
+		tempChordObj = new ChordObject();
 		tempChordObj.setChord(1,true,0,true,0,true,0,true,2,true,3,true);
 		chordDictionary.Add(tempChord, tempChordObj);
 
 		tempChord = "Gm";
+		tempChordObj = new ChordObject();
 		tempChordObj.setChord(3,true,3,true,0,true,0,true,1,true,3,true);
 		chordDictionary.Add(tempChord, tempChordObj);
 
+	}
+
+	public void addNewChord(string chordName)
+	//adds a new chord with name 'chordName' and chord value equal to the current state of the strings to the dictionary
+	{
+		ChordObject tempChordObj = new ChordObject();
+		tempChordObj.setChord((int)strings[0].value, guitarStringsToPlay[0].value,
+		                      (int)strings[1].value, guitarStringsToPlay[1].value,
+		                      (int)strings[2].value, guitarStringsToPlay[2].value,
+		                      (int)strings[3].value, guitarStringsToPlay[3].value,
+		                      (int)strings[4].value, guitarStringsToPlay[4].value,
+		                      (int)strings[5].value, guitarStringsToPlay[5].value);
+		chordDictionary.Add(chordName, tempChordObj);
 	}
 
 	public void playChord()
@@ -168,6 +211,13 @@ public class GuitarManager : MonoBehaviour {
 			}
 			yield return new WaitForSeconds(0.05f);
 		}
+	}
+
+	public void stopPlay()
+	{
+		for( int i = 0; i<guitarStringsToPlay.Length; i++)
+			strings[i].transform.parent.GetComponentInChildren<AudioSource> ().Stop ();
+
 	}
 
 

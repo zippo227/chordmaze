@@ -16,8 +16,7 @@ public class ChordSelectButton : MonoBehaviour
 
 	public void setToChord()
 	{
-		for (int i = 0; i<myStrings.Length; i++)
-				myStrings [i].gameObject.transform.parent.GetComponentInChildren<AudioSource> ().Stop ();
+		playChordButton.stopPlay ();
 
 		for (int i = 0; i<myStrings.Length; i++) //for each string
 		{
@@ -33,4 +32,32 @@ public class ChordSelectButton : MonoBehaviour
 		playChordButton.playChord ();
 	}
 
+	void Awake()
+	{
+		gameObject.GetComponentInChildren<UILabel> ().text = chordName;
+	}
+
+	public void setName(UILabel label)
+	{
+		nameBox = label;
+		chordName = label.text;
+		//gameObject.GetComponentInChildren<UILabel> ().text = name;
+	}
+
+	public void setManager(GameObject go)
+	{
+		playChordButton = go.GetComponent<GuitarManager>();
+	}
+
+	public void setStrings()
+	{
+		Debug.Log (chordName);
+		//if (playChordButton.chordDictionary [chordName])
+			//			Debug.Log ("chord is in dict");
+		GuitarManager.ChordObject myChord = playChordButton.chordDictionary[chordName];
+		stringSettings = myChord.getStrings();
+		playString = myChord.getStringSettings();
+		myToggles = playChordButton.guitarStringsToPlay;
+		myStrings = playChordButton.strings;
+	}
 }
