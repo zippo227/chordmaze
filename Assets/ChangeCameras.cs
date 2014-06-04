@@ -17,4 +17,8 @@ public class ChangeCameras : MonoBehaviour
 		mazeCam.GetComponent<Camera> ().enabled = false;
 	}
 
+	public void SubmitStrings(){
+		MazemanagerScript.instance.InvokeCreateMaze ();
+	}
+
 }
