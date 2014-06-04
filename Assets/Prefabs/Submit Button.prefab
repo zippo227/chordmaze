@@ -8,7 +8,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 400000}
-  m_Layer: 9
+  m_Layer: 8
   m_Name: NGUI Snapshot Point 36
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -44,7 +44,7 @@ GameObject:
   - 65: {fileID: 6500000}
   - 114: {fileID: 11400000}
   m_Layer: 9
-  m_Name: ChordButton
+  m_Name: Submit Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -79,7 +79,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100004}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 9.87044334, y: -249.978775, z: 0}
+  m_LocalPosition: {x: 291, y: 282, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400002}
@@ -95,7 +95,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 80, y: 40, z: 0}
+  m_Size: {x: 148, y: 40, z: 0}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &11400000
 MonoBehaviour:
@@ -105,28 +105,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 100004}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 00f72ebeb93d944a69bfcb1e984f94ed, type: 3}
+  m_Script: {fileID: 11500000, guid: 9ae1d0eca407b428689d2886705fff3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  myStrings:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  stringSettings: 000000000100000000000000020000000300000000000000
-  myToggles:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  playString: 010101010100
-  nameBox: {fileID: 0}
-  chordName: 
-  playChordButton: {fileID: 0}
+  guitarCam: {fileID: 0}
+  mazeCam: {fileID: 0}
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -139,35 +122,35 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   leftAnchor:
-    target: {fileID: 0}
+    target: {fileID: 400004}
     relative: 0
     absolute: 4
   rightAnchor:
-    target: {fileID: 0}
+    target: {fileID: 400004}
     relative: 1
     absolute: -4
   bottomAnchor:
-    target: {fileID: 0}
+    target: {fileID: 400004}
     relative: 0
     absolute: 4
   topAnchor:
-    target: {fileID: 0}
+    target: {fileID: 400004}
     relative: 1
     absolute: -4
   updateAnchors: 1
   mColor: {r: 0, g: 0, b: 0, a: .737254918}
   mPivot: 4
-  mWidth: 50
-  mHeight: 20
+  mWidth: 140
+  mHeight: 32
   mDepth: 5
   autoResizeBoxCollider: 0
   hideIfOffScreen: 0
   keepAspectRatio: 0
-  aspectRatio: 2.5
+  aspectRatio: 4.375
   keepCrispWhenShrunk: 1
   mTrueTypeFont: {fileID: 0}
   mFont: {fileID: 11400000, guid: 29056518aafb01b49a5b08faf8e30cff, type: 2}
-  mText: C maj
+  mText: Submit
   mFontSize: 20
   mFontStyle: 0
   mAlignment: 0
@@ -177,7 +160,7 @@ MonoBehaviour:
   mEffectColor: {r: 0, g: 0, b: 0, a: 1}
   mSymbols: 1
   mEffectDistance: {x: 1, y: 1}
-  mOverflow: 2
+  mOverflow: 0
   mMaterial: {fileID: 0}
   mApplyGradient: 1
   mGradientTop: {r: 1, g: 1, b: 1, a: 1}
@@ -210,11 +193,7 @@ MonoBehaviour:
   pressedSprite: 
   disabledSprite: 
   pixelSnap: 0
-  onClick:
-  - mTarget: {fileID: 11400000}
-    mMethodName: setToChord
-    mParameters: []
-    oneShot: 0
+  onClick: []
 --- !u!114 &11400006
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -227,31 +206,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   leftAnchor:
-    target: {fileID: 400002}
-    relative: 0
-    absolute: -15
+    target: {fileID: 0}
+    relative: .5
+    absolute: 217
   rightAnchor:
-    target: {fileID: 400002}
-    relative: 1
-    absolute: 15
+    target: {fileID: 0}
+    relative: .5
+    absolute: 365
   bottomAnchor:
-    target: {fileID: 400002}
-    relative: 0
-    absolute: -10
-  topAnchor:
-    target: {fileID: 400002}
+    target: {fileID: 0}
     relative: 1
-    absolute: 10
-  updateAnchors: 0
+    absolute: -98
+  topAnchor:
+    target: {fileID: 0}
+    relative: 1
+    absolute: -58
+  updateAnchors: 1
   mColor: {r: 1, g: 1, b: 1, a: 1}
   mPivot: 4
-  mWidth: 80
+  mWidth: 148
   mHeight: 40
   mDepth: 4
   autoResizeBoxCollider: 1
   hideIfOffScreen: 0
   keepAspectRatio: 0
-  aspectRatio: 2
+  aspectRatio: 3.70000005
   mType: 1
   mFillDirection: 4
   mFillAmount: 1

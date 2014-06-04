@@ -163,7 +163,7 @@ public class GuitarManager : MonoBehaviour {
 		{
 			if (guitarStringsToPlay[i].value)
 			{
-				strings[i].GetComponent<NoteManager>().PlayMyNote();
+				strings[i].transform.parent.GetComponentInChildren<NoteManager>().PlayMyNote();
 				
 			}
 			yield return new WaitForSeconds(0.05f);

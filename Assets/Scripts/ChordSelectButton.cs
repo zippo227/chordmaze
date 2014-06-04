@@ -12,7 +12,7 @@ public class ChordSelectButton : MonoBehaviour
 	public UILabel nameBox;
 	public string chordName;
 
-	public ChordButton playChordButton;
+	public GuitarManager playChordButton;
 
 	public void setToChord()
 	{
