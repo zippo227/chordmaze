@@ -17,6 +17,7 @@ public class ChordSelectButton : MonoBehaviour
 	public void setToChord()
 	{
 		playChordButton.setChord (chordName);
+		nameBox.text = chordName;
 //		playChordButton.stopPlay ();
 //
 //		for (int i = 0; i<myStrings.Length; i++) //for each string
