@@ -84,17 +84,17 @@ public class GuitarManager : MonoBehaviour {
 		ChordObject tempChordObj;
 		string tempChord = "A";
 		tempChordObj = new ChordObject();
-		tempChordObj.setChord(0,true,2,true,2,true,2,true,0,true,0,true);
+		tempChordObj.setChord(0,true,2,true,2,true,2,true,0,true,0,false);
 		chordDictionary.Add(tempChord, tempChordObj);
 
 		tempChord = "A7";
 		tempChordObj = new ChordObject();
-		tempChordObj.setChord(0,true,2,true,0,true,2,true,0,true,0,true);
+		tempChordObj.setChord(0,true,2,true,0,true,2,true,0,true,0,false);
 		chordDictionary.Add(tempChord, tempChordObj);
 
 		tempChord = "Am";
 		tempChordObj = new ChordObject();
-		tempChordObj.setChord(0,true,1,true,2,true,2,true,0,true,0,true);
+		tempChordObj.setChord(0,true,1,true,2,true,2,true,0,true,0,false);
 		chordDictionary.Add(tempChord, tempChordObj);
 
 		tempChord = "B";
@@ -274,7 +274,7 @@ public class GuitarManager : MonoBehaviour {
 		for (int i = 0; i<tempProgression.Count; i++) 
 		{
 			setChord(tempProgression[i]);
-			yield return new WaitForSeconds(0.25f);
+			yield return new WaitForSeconds(0.65f);
 		}
 		noteWait = 0.05f;
 	}
