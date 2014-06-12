@@ -3,12 +3,24 @@ using System.Collections;
 
 public class ChangeCameras : MonoBehaviour 
 {
-	public GameObject guitarCam, mazeCam;
+	public GameObject guitarCam, mazeCam, errorWindow;
 
+	void Awake()
+	{
+		errorWindow.SetActive (false);
+	}
+	
 	public void changeToMazeView()
 	{
-		guitarCam.GetComponent<Camera> ().enabled = false;
-		mazeCam.GetComponent<Camera> ().enabled = true;
+		if (GuitarManager.instance.chordProgression.Count >= 5) 
+		{
+			guitarCam.GetComponent<Camera> ().enabled = false;
+			mazeCam.GetComponent<Camera> ().enabled = true;
+			SubmitStrings ();
+		} else 
+		{
+			errorWindow.SetActive(true);
+		}
 	}
 
 	public void changeToGuitarView()
@@ -19,6 +31,11 @@ public class ChangeCameras : MonoBehaviour
 
 	public void SubmitStrings(){
 		MazemanagerScript.instance.InvokeCreateMaze ();
+	}
+
+	public void closeErrorWindow()
+	{
+		errorWindow.SetActive (false);
 	}
 
 }
