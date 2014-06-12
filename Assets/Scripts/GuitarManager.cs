@@ -81,7 +81,7 @@ public class GuitarManager : MonoBehaviour {
 
 		tempChord = "A7";
 		tempChordObj = new ChordObject();
-		tempChordObj.setChord(0,true,2,true,2,true,2,true,0,true,0,true);
+		tempChordObj.setChord(0,true,2,true,0,true,2,true,0,true,0,true);
 		chordDictionary.Add(tempChord, tempChordObj);
 
 		tempChord = "Am";
@@ -192,6 +192,30 @@ public class GuitarManager : MonoBehaviour {
 		                      (int)strings[4].value, guitarStringsToPlay[4].value,
 		                      (int)strings[5].value, guitarStringsToPlay[5].value);
 		chordDictionary.Add(chordName, tempChordObj);
+	}
+
+	public void setChord(string name)
+	{
+		//public UIToggle[] guitarStringsToPlay;
+		//public UISlider[] strings;
+
+		stopPlay ();
+
+		ChordObject cObj = new ChordObject ();
+		cObj = chordDictionary [name];
+		int[] chordStrings = cObj.getStrings ();
+		bool[] stringSettings = cObj.getStringSettings ();
+		
+		for (int i = 0; i<strings.Length; i++) //for each string
+		{
+			//set string to the value designated by this chord
+			strings[i].value = .0833f * chordStrings[i];
+			//set Toggle to the value designated by this chord
+			guitarStringsToPlay[i].value = stringSettings[i];
+
+		}
+		
+		playChord ();
 	}
 
 	public void playChord()

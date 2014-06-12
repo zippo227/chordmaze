@@ -16,20 +16,21 @@ public class ChordSelectButton : MonoBehaviour
 
 	public void setToChord()
 	{
-		playChordButton.stopPlay ();
-
-		for (int i = 0; i<myStrings.Length; i++) //for each string
-		{
-			//set string to the value designated by this chord
-			myStrings[i].value = .0833f * stringSettings[i];
-
-			//set Toggle to the value designated by this chord
-			myToggles[i].value = playString[i];
-		}
-
-		nameBox.text = chordName;
-
-		playChordButton.playChord ();
+		playChordButton.setChord (chordName);
+//		playChordButton.stopPlay ();
+//
+//		for (int i = 0; i<myStrings.Length; i++) //for each string
+//		{
+//			//set string to the value designated by this chord
+//			myStrings[i].value = .0833f * stringSettings[i];
+//
+//			//set Toggle to the value designated by this chord
+//			myToggles[i].value = playString[i];
+//		}
+//
+//		nameBox.text = chordName;
+//
+//		playChordButton.playChord ();
 	}
 
 	void Awake()
