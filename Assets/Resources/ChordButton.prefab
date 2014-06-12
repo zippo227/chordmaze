@@ -79,8 +79,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100004}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 9.87044334, y: -249.978775, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 116.840347, y: -132.978714, z: 0}
+  m_LocalScale: {x: 1.03784657, y: 1.18772674, z: 1}
   m_Children:
   - {fileID: 400002}
   - {fileID: 400000}
@@ -95,7 +95,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 80, y: 40, z: 0}
+  m_Size: {x: 82, y: 44, z: 0}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &11400000
 MonoBehaviour:
@@ -115,7 +115,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  stringSettings: 000000000100000000000000020000000300000000000000
+  stringSettings: 020000000000000002000000010000000200000000000000
   myToggles:
   - {fileID: 0}
   - {fileID: 0}
@@ -125,7 +125,7 @@ MonoBehaviour:
   - {fileID: 0}
   playString: 010101010100
   nameBox: {fileID: 0}
-  chordName: 
+  chordName: B7
   playChordButton: {fileID: 0}
 --- !u!114 &11400002
 MonoBehaviour:
@@ -245,13 +245,13 @@ MonoBehaviour:
   updateAnchors: 0
   mColor: {r: 1, g: 1, b: 1, a: 1}
   mPivot: 4
-  mWidth: 80
-  mHeight: 40
+  mWidth: 84
+  mHeight: 52
   mDepth: 4
   autoResizeBoxCollider: 1
   hideIfOffScreen: 0
   keepAspectRatio: 0
-  aspectRatio: 2
+  aspectRatio: 1.61538458
   mType: 1
   mFillDirection: 4
   mFillAmount: 1

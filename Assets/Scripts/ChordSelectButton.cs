@@ -53,7 +53,6 @@ public class ChordSelectButton : MonoBehaviour
 
 	public void setStrings()
 	{
-		Debug.Log (chordName);
 		//if (playChordButton.chordDictionary [chordName])
 			//			Debug.Log ("chord is in dict");
 		GuitarManager.ChordObject myChord = playChordButton.chordDictionary[chordName];

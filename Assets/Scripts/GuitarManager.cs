@@ -289,7 +289,6 @@ public class GuitarManager : MonoBehaviour {
 		//for each chord in the given progression, play that chord and wait .3 seconds
 		for (int i = 0; i<tempProgression.Count; i++) 
 		{
-			Debug.Log (noteWait);
 			setChord(tempProgression[i]);
 			yield return new WaitForSeconds(0.65f);
 		}

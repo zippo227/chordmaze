@@ -3645,7 +3645,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100136}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3851.30811, y: -111.008881, z: 0}
+  m_LocalPosition: {x: -3871.30957, y: -117.009369, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 400020}
@@ -7548,6 +7548,13 @@ MonoBehaviour:
   - {fileID: 11400042}
   - {fileID: 11400238}
   - {fileID: 11400144}
+  notes:
+  - {fileID: 11400212}
+  - {fileID: 11400022}
+  - {fileID: 11400366}
+  - {fileID: 11400346}
+  - {fileID: 11400320}
+  - {fileID: 11400128}
   chordLabel: {fileID: 11400242}
   progressionGrid: {fileID: 11400182}
 --- !u!114 &11400092
@@ -9250,7 +9257,7 @@ MonoBehaviour:
   container: {fileID: 100020}
   side: 2
   runOnlyOnce: 1
-  relativeOffset: {x: .0599999987, y: -.300000012}
+  relativeOffset: {x: .0359999985, y: -.370000005}
   pixelOffset: {x: 0, y: 0}
   widgetContainer: {fileID: 0}
 --- !u!114 &11400182
@@ -9272,7 +9279,7 @@ MonoBehaviour:
   cellHeight: 200
   animateSmoothly: 1
   hideInactive: 0
-  keepWithinPanel: 1
+  keepWithinPanel: 0
   sorted: 0
 --- !u!114 &11400184
 MonoBehaviour:
