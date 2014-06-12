@@ -6,6 +6,7 @@ public class MazemanagerScript : MonoBehaviour {
 	public static MazemanagerScript instance { get; private set; }
 
 	public GameObject MazeButton;
+	public GameObject MessageWindow;
 	public Vector3 CenterofScreen;
 	public float MazeWidth;
 	public float MazeHeight;
@@ -106,10 +107,87 @@ public class MazemanagerScript : MonoBehaviour {
 				    CurrentPosition.x = CurrentPosition.x+SidelenOfButton;
 				}
 				if(VisitMatrix[k,j]==false){
-					CreateButton("random",CurrentPosition);
+					string s = RandomString();
+					CreateButton(s,CurrentPosition);
 				}
 			}
 		}
+	}
+
+	string RandomString(){
+		int num = Random.Range (0, 21);
+		string s = GetString (num);
+		return s;
+	}
+
+	string GetString(int num){
+		string s = "random";
+		switch (num) {
+		case 0:
+			s = "A";
+			break;
+		case 1:
+			s = "Am";
+			break;
+		case 2:
+			s = "A7";
+			break;
+		case 3:
+			s = "B";
+			break;
+		case 4:
+			s = "Bm";
+			break;
+		case 5:
+			s = "B7";
+			break;
+		case 6:
+			s = "C";
+			break;
+		case 7:
+			s = "Cm";
+			break;
+		case 8:
+			s = "C7";
+			break;
+		case 9:
+			s = "D";
+			break;
+		case 10:
+			s = "Dm";
+			break;
+		case 11:
+			s = "D7";
+			break;
+		case 12:
+			s = "E";
+			break;
+		case 13:
+			s = "Em";
+			break;
+		case 14:
+			s = "E7";
+			break;
+		case 15:
+			s = "F";
+			break;
+		case 16:
+			s = "Fm";
+			break;
+		case 17:
+			s = "F7";
+			break;
+		case 18:
+			s = "G";
+			break;
+		case 19:
+			s = "Gm";
+			break;
+		case 20:
+			s = "G7";
+			break;
+		}
+		return s;
 	}
 
 	void CreateButton(string myChord, Vector3 position){

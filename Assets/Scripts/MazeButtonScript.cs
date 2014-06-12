@@ -13,6 +13,7 @@ public class MazeButtonScript : MonoBehaviour {
 
 
 	public void PlayChords(){
+		GuitarManager.instance.setChord (MyChord);
 	}
 
 	public void GetLabel(){
