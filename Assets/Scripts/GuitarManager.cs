@@ -260,6 +260,7 @@ public class GuitarManager : MonoBehaviour {
 
 	public void playProgression(List<string> progression)
 	{
+		StopAllCoroutines ();
 		noteWait = 0.0f;
 		tempProgression = progression;
 		stopPlay ();
