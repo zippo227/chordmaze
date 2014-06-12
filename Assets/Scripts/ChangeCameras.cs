@@ -14,8 +14,8 @@ public class ChangeCameras : MonoBehaviour
 	{
 		if (GuitarManager.instance.chordProgression.Count >= 5) 
 		{
-			guitarCam.GetComponent<Camera> ().enabled = false;
-			mazeCam.GetComponent<Camera> ().enabled = true;
+			guitarCam.SetActive(false);
+			mazeCam.SetActive(true);
 			SubmitStrings ();
 		} else 
 		{
@@ -25,8 +25,8 @@ public class ChangeCameras : MonoBehaviour
 
 	public void changeToGuitarView()
 	{
-		guitarCam.GetComponent<Camera> ().enabled = true;
-		mazeCam.GetComponent<Camera> ().enabled = false;
+		guitarCam.SetActive (true);
+		mazeCam.SetActive (false);
 	}
 
 	public void SubmitStrings(){
