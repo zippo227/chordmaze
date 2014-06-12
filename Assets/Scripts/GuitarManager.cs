@@ -65,10 +65,14 @@ public class GuitarManager : MonoBehaviour {
 	//these are references to the toggles and sliders that make up the guitar.
 	public UIToggle[] guitarStringsToPlay;
 	public UISlider[] strings;
+	public NoteManager[] notes;
 
 	//these are used when resetting the guitar
 	public UILabel chordLabel;
 	public UIGrid progressionGrid;
+
+	//used to determine the % distance between frets.
+	public const float fretPerc = 1.0f / 12.0f;
 
 	//the time to wait between notes; set to zero when playing a chord progression
 	float noteWait = 0.05f;
@@ -223,7 +227,7 @@ public class GuitarManager : MonoBehaviour {
 		for (int i = 0; i<strings.Length; i++) //for each string
 		{
 			//set string to the value designated by this chord
-			strings[i].value = .0833f * chordStrings[i];
+			strings[i].value = fretPerc * chordStrings[i];
 			//set Toggle to the value designated by this chord
 			guitarStringsToPlay[i].value = stringSettings[i];
 
@@ -234,8 +238,20 @@ public class GuitarManager : MonoBehaviour {
 
 	public void playChord()
 	{
-		StartCoroutine ("playNotes");
-		
+		if(noteWait>0)
+		{
+			StartCoroutine ("playNotes");
+		}
+		else
+		{
+			for(int i = guitarStringsToPlay.Length-1; i>=0; i--)
+			{
+				if (guitarStringsToPlay[i].value)
+				{
+					notes[i].PlayMyNote();
+				}
+			}
+		}
 	}
 	
 	IEnumerator playNotes()
@@ -244,8 +260,7 @@ public class GuitarManager : MonoBehaviour {
 		{
 			if (guitarStringsToPlay[i].value)
 			{
-				strings[i].transform.parent.GetComponentInChildren<NoteManager>().PlayMyNote();
-				
+				notes[i].PlayMyNote();
 			}
 			yield return new WaitForSeconds(noteWait);
 		}
@@ -254,8 +269,9 @@ public class GuitarManager : MonoBehaviour {
 	public void stopPlay()
 	{
 		for( int i = 0; i<guitarStringsToPlay.Length; i++)
-			strings[i].transform.parent.GetComponentInChildren<AudioSource> ().Stop ();
-
+		{
+			notes[i].StopMyNote();
+		}
 	}
 
 	public void playProgression(List<string> progression)
@@ -273,6 +289,7 @@ public class GuitarManager : MonoBehaviour {
 		//for each chord in the given progression, play that chord and wait .3 seconds
 		for (int i = 0; i<tempProgression.Count; i++) 
 		{
+			Debug.Log (noteWait);
 			setChord(tempProgression[i]);
 			yield return new WaitForSeconds(0.65f);
 		}

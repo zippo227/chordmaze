@@ -23,6 +23,7 @@ public class AddToProgression : MonoBehaviour
 		newChord.GetComponent<ChordSelectButton> ().setManager (manager.gameObject);
 		newChord.GetComponent<ChordSelectButton> ().setName (nameBox);
 		newChord.GetComponent<ChordSelectButton> ().setStrings ();
+		newChord.GetComponent<UISprite> ().SetDimensions (84, 52);
 
 		NGUITools.AddChild (newChordGrid.gameObject, newChord);
 		//GameObject.Destroy (newChord);
