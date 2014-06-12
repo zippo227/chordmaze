@@ -66,6 +66,13 @@ public class GuitarManager : MonoBehaviour {
 	public UIToggle[] guitarStringsToPlay;
 	public UISlider[] strings;
 
+	//these are used when resetting the guitar
+	public UILabel chordLabel;
+	public UIGrid progressionGrid;
+
+	//the time to wait between notes; set to zero when playing a chord progression
+	float noteWait = 0.05f;
+
 	void Awake()
 	{
 		mInstance = this;
@@ -180,6 +187,12 @@ public class GuitarManager : MonoBehaviour {
 		tempChordObj.setChord(3,true,3,true,0,true,0,true,1,true,3,true);
 		chordDictionary.Add(tempChord, tempChordObj);
 
+		tempChord = "reset";
+		tempChordObj = new ChordObject();
+		tempChordObj.setChord(0,false,0,false,0,false,0,false,0,false,0,false);
+		chordDictionary.Add(tempChord, tempChordObj);
+
+
 	}
 
 	public void addNewChord(string chordName)
@@ -234,7 +247,7 @@ public class GuitarManager : MonoBehaviour {
 				strings[i].transform.parent.GetComponentInChildren<NoteManager>().PlayMyNote();
 				
 			}
-			yield return new WaitForSeconds(0.05f);
+			yield return new WaitForSeconds(noteWait);
 		}
 	}
 
@@ -247,6 +260,7 @@ public class GuitarManager : MonoBehaviour {
 
 	public void playProgression(List<string> progression)
 	{
+		noteWait = 0.0f;
 		tempProgression = progression;
 		stopPlay ();
 		StartCoroutine ("playChords");
@@ -255,13 +269,37 @@ public class GuitarManager : MonoBehaviour {
 	IEnumerator playChords()
 	{
 
-
 		//for each chord in the given progression, play that chord and wait .3 seconds
 		for (int i = 0; i<tempProgression.Count; i++) 
 		{
 			setChord(tempProgression[i]);
-			yield return new WaitForSeconds(1.2f);
+			yield return new WaitForSeconds(0.25f);
 		}
+		noteWait = 0.05f;
+	}
+
+	public void resetGuitar()
+	{
+		stopPlay ();
+		StopAllCoroutines ();
+		//clear all progressions
+		tempProgression.Clear ();
+		chordProgression.Clear ();
+
+		//clear all strings and set toggles to zero
+		setChord ("reset");
+
+		chordLabel.text = "Name this chord";
+		BetterList<Transform> gridItems = new BetterList<Transform> ();
+		gridItems = progressionGrid.GetChildList ();
+
+		for (int i = gridItems.size - 1; i >= 0; i--)
+		{
+			gridItems[i].parent = null;
+			NGUITools.Destroy(gridItems[i].gameObject);
+			gridItems[i] = null;
+		}
+
 	}
 
 
