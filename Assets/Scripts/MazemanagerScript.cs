@@ -1,12 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+using System.Collections.Generic;
 
 public class MazemanagerScript : MonoBehaviour {
 	public static MazemanagerScript instance { get; private set; }
-
 	public GameObject MazeButton;
 	public GameObject MessageWindow;
+	public GameObject CurrentChoosingChord;
+	public List<string> MyChordsList;
 	public Vector3 CenterofScreen;
 	public float MazeWidth;
 	public float MazeHeight;
@@ -18,15 +19,166 @@ public class MazemanagerScript : MonoBehaviour {
 	public Vector2 VisitPointer = new Vector2 (0, 0);
 	public int up;
 	public int right;
+	public int pX;
+	public int pY;
+	public Color DefalutColor;
 	// Use this for initialization
 	public string ChordToPlay;
+	public bool IsShowPath;
+
+	UIInput MessageScript;
+	UIButton MazeButtonScriptRef;
+
 	void Awake(){
 		instance = this;
 	}
 
 	void Start () {
 
+		MessageScript = (UIInput)MessageWindow.GetComponent<UIInput> ();
+		MazeButtonScriptRef = (UIButton)MazeButton.GetComponent<UIButton> ();
+		Init ();
+	}
 
+	public void Init(){
+		SetMessage ("Click Button to Choose Next Node");
+		pX = -1;
+		pY = 0;
+		up = 0;
+		right = 0;
+		MyChordsList.Clear ();
+		DefalutColor = MazeButtonScriptRef.defaultColor;
+		ClearMaze ();
+		IsShowPath = false;
+	}
+
+	public void SetMessage(string message){
+		MessageScript.value = message;
+	}
+
+	public void PlayOriginalSong(){
+		GuitarManager.instance.playProgression (GuitarManager.instance.chordProgression);
+	}
+
+	public void PlayMySong(){
+		GuitarManager.instance.playProgression (MyChordsList);
+	}
+
+	public void ChooseChord(GameObject NewButton){
+		if (CurrentChoosingChord != null) {
+			UIButton OldButtonScript = (UIButton)CurrentChoosingChord.GetComponent<UIButton> ();
+			OldButtonScript.defaultColor = DefalutColor;
+		}
+		CurrentChoosingChord = NewButton;
+		UIButton MyButton = (UIButton)CurrentChoosingChord.GetComponent<UIButton> ();
+		MyButton.defaultColor = MyButton.hover;
+	}
+
+	public void AddChord(){
+		if (CurrentChoosingChord == null) {
+			SetMessage("There's no chosen chord!");
+			return;
+		}
+
+		MazeButtonScript ButtonScript = (MazeButtonScript)CurrentChoosingChord.GetComponent<MazeButtonScript> ();
+		UIButton MyButton = (UIButton)CurrentChoosingChord.GetComponent<UIButton> ();
+		if ((ButtonScript.x == pX + 1&&ButtonScript.y==pY) || (ButtonScript.y == pY + 1&&ButtonScript.x==pX)) {
+			SetMessage ("Add Chord Successfully!");
+			MyChordsList.Add (ButtonScript.MyChord);
+			pX = ButtonScript.x;
+			pY = ButtonScript.y;
+			CurrentChoosingChord = null;
+			MyButton.defaultColor = MyButton.pressed;
+
+		} else {
+			SetMessage ("Cannot Forge a Path!");
+			CurrentChoosingChord = null;
+			MyButton.defaultColor = DefalutColor;
+			return;
+		}
+
+
+	}
+
+	public void CompareChords(){
+		if (MyChordsList.Count != GuitarManager.instance.chordProgression.Count) {
+			SetMessage("Less or More Chords!");
+			MyChordsList.Clear();
+			pX=-1;
+			pY=0;
+			return;
+		}
+		for (int i =0; i<MyChordsList.Count; i++) {
+			if(MyChordsList[i]!=GuitarManager.instance.chordProgression[i]){
+				SetMessage("Wrong Answer!");
+				MyChordsList.Clear();
+				pX=-1;
+				pY=0;
+				return;
+			}
+		}
+		SetMessage("Congratulations!");
+		MyChordsList.Clear();
+		pX=-1;
+		pY=0;
+		PlayOriginalSong ();
+	}
+
+	public void ClearMaze(){
+		GameObject MazeUI = GameObject.FindGameObjectWithTag ("MazeUI");
+		foreach (Transform child in MazeUI.transform) {
+			if(child.tag=="MazeButton"){
+				child.GetComponent<MazeButtonScript>().DestroyMyself();
+			}
+		}
+	}
+
+	public void ResetMazeButtonColor(){
+		GameObject MazeUI = GameObject.FindGameObjectWithTag ("MazeUI");
+		foreach (Transform child in MazeUI.transform) {
+			if(child.tag=="MazeButton"){
+				child.GetComponent<UIButton>().defaultColor = DefalutColor;
+				MyChordsList.Clear();
+				pX=-1;
+				pY=0;
+			}
+		}
+	}
+
+	public void ShowPath(){
+		GameObject MazeUI = GameObject.FindGameObjectWithTag ("MazeUI");
+		ResetMazeButtonColor ();
+		if (IsShowPath == false) 
+		{
+			foreach (Transform child in MazeUI.transform) 
+			{
+				if (child.tag == "MazeButton") {
+					MazeButtonScript MyButton = (MazeButtonScript)child.GetComponent<MazeButtonScript> ();
+					if (VisitMatrix [MyButton.x, MyButton.y] == true) 
+					{
+						child.GetComponent<UIButton> ().defaultColor = child.GetComponent<UIButton> ().pressed;
+						MyChordsList.Clear();
+						pX=-1;
+						pY=0;
+					}
+				}
+			}
+			IsShowPath = true;
+		} 
+		else 
+		{
+			foreach (Transform child in MazeUI.transform) 
+			{
+				if (child.tag == "MazeButton") {
+					MazeButtonScript MyButton = (MazeButtonScript)child.GetComponent<MazeButtonScript> ();
+					if (VisitMatrix [MyButton.x, MyButton.y] == true) 
+					{
+						child.GetComponent<UIButton> ().defaultColor = DefalutColor;
+					}
+				}
+			}
+			IsShowPath = false;
+		}
 	}
 
 	public void InvokeCreateMaze(){
@@ -70,12 +222,13 @@ public class MazemanagerScript : MonoBehaviour {
 	}
 
 	void CreateMaze(){
-		Vector3 Start = new Vector3 ();
+		Vector3 Start = Vector3.zero;
 		Vector3 CurrentPosition = new Vector3 ();
 		VisitPointer = new Vector2 (0, 0);
-		Start = CenterofScreen;
 		Start.x = CenterofScreen.x - MazeWidth / 2 + SidelenOfButton / 2;
 		Start.y = CenterofScreen.y - MazeHeight / 2 + SidelenOfButton / 2;
+		Start.z = CenterofScreen.z;
+
 		CurrentPosition = Start;
 		Debug.Log ("Start " + CurrentPosition); 
 		int i = -1;
@@ -91,7 +244,7 @@ public class MazemanagerScript : MonoBehaviour {
 					CurrentPosition.x = CurrentPosition.x+SidelenOfButton;
 				}
 			}
-			CreateButton(text,CurrentPosition);
+			CreateButton(text,CurrentPosition,(int)VisitPointer.x,(int)VisitPointer.y);
 			VisitMatrix [(int)VisitPointer.x, (int)VisitPointer.y] = true;
 			Debug.Log ((int)VisitPointer.x+"   "+(int)VisitPointer.y);
 			i++;
@@ -108,7 +261,7 @@ public class MazemanagerScript : MonoBehaviour {
 				}
 				if(VisitMatrix[k,j]==false){
 					string s = RandomString();
-					CreateButton(s,CurrentPosition);
+					CreateButton(s,CurrentPosition,k,j);
 				}
 			}
 		}
@@ -190,13 +343,15 @@ public class MazemanagerScript : MonoBehaviour {
 		return s;
 	}
 
-	void CreateButton(string myChord, Vector3 position){
+	void CreateButton(string myChord, Vector3 position, int x, int y){
 		GameObject Clone = (GameObject)Instantiate (MazeButton, transform.position, transform.rotation);
 		Clone.transform.parent = GameObject.FindGameObjectWithTag ("MazeUI").transform;
 		Clone.transform.localScale = new Vector3 (1, 1, 1);
 		Clone.transform.localPosition = position;
 		MazeButtonScript CloneScript = (MazeButtonScript)Clone.GetComponent<MazeButtonScript> ();
 		CloneScript.MyChord = myChord;
+		CloneScript.x = x;
+		CloneScript.y = y;
 		CloneScript.GetLabel ();
 		CloneScript.SideLen = SidelenOfButton;
 		CloneScript.SetSize ();

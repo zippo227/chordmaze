@@ -12,6 +12,7 @@ public class ChangeCameras : MonoBehaviour
 	
 	public void changeToMazeView()
 	{
+
 		if (GuitarManager.instance.chordProgression.Count >= 5) 
 		{
 			guitarCam.SetActive(false);
@@ -21,12 +22,15 @@ public class ChangeCameras : MonoBehaviour
 		{
 			errorWindow.SetActive(true);
 		}
+
 	}
 
 	public void changeToGuitarView()
 	{
+
 		guitarCam.SetActive (true);
 		mazeCam.SetActive (false);
+
 	}
 
 	public void SubmitStrings(){

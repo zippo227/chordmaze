@@ -59,7 +59,6 @@ public class GuitarManager : MonoBehaviour {
 	//GuitarManager also stores all the strings and toggles
 
 	public List<string> chordProgression; //the user's chord Progression as set in the guitar mode
-	public List<string> tempProgression;  //a passed in progression, from maze mode
 	public Dictionary<string, ChordObject> chordDictionary = new Dictionary<string, ChordObject> ();
 
 	//these are references to the toggles and sliders that make up the guitar.
@@ -217,7 +216,7 @@ public class GuitarManager : MonoBehaviour {
 		//public UIToggle[] guitarStringsToPlay;
 		//public UISlider[] strings;
 
-		//stopPlay ();
+		stopPlay ();
 
 		ChordObject cObj = new ChordObject ();
 		cObj = chordDictionary [name];
@@ -273,17 +272,17 @@ public class GuitarManager : MonoBehaviour {
 			notes[i].StopMyNote();
 		}
 	}
-
+	
 	public void playProgression(List<string> progression)
 	{
 		StopAllCoroutines ();
 		noteWait = 0.0f;
-		tempProgression = progression;
+
 		stopPlay ();
-		StartCoroutine ("playChords");
+		StartCoroutine (playChords(progression));
 	}
 
-	IEnumerator playChords()
+	IEnumerator playChords(List<string> tempProgression)
 	{
 
 		//for each chord in the given progression, play that chord and wait .3 seconds
@@ -300,7 +299,6 @@ public class GuitarManager : MonoBehaviour {
 		stopPlay ();
 		StopAllCoroutines ();
 		//clear all progressions
-		tempProgression.Clear ();
 		chordProgression.Clear ();
 
 		//clear all strings and set toggles to zero

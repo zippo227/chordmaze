@@ -7,7 +7,7 @@ public class ReturnButtonScript : MonoBehaviour {
 
 	public void ChangeToGuitarPanel(){
 
-		MazeCam.GetComponent<Camera> ().enabled = false;
-		GuitarCam.GetComponent<Camera> ().enabled = true;
+		MazeCam.SetActive (false);
+		GuitarCam.SetActive (true);
 	}
 }
