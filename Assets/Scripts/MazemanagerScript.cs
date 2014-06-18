@@ -106,6 +106,7 @@ public class MazemanagerScript : MonoBehaviour {
 			MyChordsList.Clear();
 			pX=-1;
 			pY=0;
+			ResetMazeButtonColor();
 			return;
 		}
 		for (int i =0; i<MyChordsList.Count; i++) {
@@ -114,6 +115,7 @@ public class MazemanagerScript : MonoBehaviour {
 				MyChordsList.Clear();
 				pX=-1;
 				pY=0;
+				ResetMazeButtonColor();
 				return;
 			}
 		}
@@ -359,8 +361,8 @@ public class MazemanagerScript : MonoBehaviour {
 	}
 
 	void GetTheLengthOfButton(int NumofUP, int NumofRight ,ref float LenofButton , float MaxWidth, float MaxHeight){
-		float MaxButtonHeight = MaxHeight / up;
-		float MaxButtonWidth = MaxWidth / right;
+		float MaxButtonHeight = MaxHeight / (up+1);
+		float MaxButtonWidth = MaxWidth / (right+1);
 		LenofButton = (MaxButtonHeight < MaxButtonWidth) ? MaxButtonHeight : MaxButtonWidth;
 	}
 
