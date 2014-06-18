@@ -19,6 +19,12 @@ public class AddToProgression : MonoBehaviour
 			errorMsg.text = "Error: \n Cannot add chord with no strings being played.";
 			errorWindow.SetActive(true);
 		}
+		//show error if user is trying to add >30 chords
+		else if(manager.chordProgression.Count == 30)
+		{
+			errorMsg.text = "Error: \n Cannot add more than 30 chords.";
+			errorWindow.SetActive(true);
+		}
 		else
 		{
 
