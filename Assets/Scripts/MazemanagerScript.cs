@@ -194,14 +194,14 @@ public class MazemanagerScript : MonoBehaviour {
 			}
 		}
 		ChordSteps = GuitarManager.instance.chordProgression.Count-1;
-		Debug.Log (GuitarManager.instance.chordProgression.Count);
+		//Debug.Log (GuitarManager.instance.chordProgression.Count);
 		CenterofScreen = new Vector3 (0, 0, 0);
 		MazeWidth = 300.0f;
 		MazeHeight = 300.0f; 
 		MaxUpSteps = (int)(ChordSteps * (MazeHeight / (MazeWidth + MazeHeight)));
 		RandomStep (MySteps, ref up, ref right, ChordSteps);
 		GetTheLengthOfButton (up, right, ref SidelenOfButton, MazeWidth, MazeHeight);
-		Debug.Log (SidelenOfButton);
+		//Debug.Log (SidelenOfButton);
 		//CreateButton ("Am", CenterofScreen);
 		CreateMaze ();
 	}
@@ -235,7 +235,7 @@ public class MazemanagerScript : MonoBehaviour {
 		Start.z = CenterofScreen.z;
 
 		CurrentPosition = Start;
-		Debug.Log ("Start " + CurrentPosition); 
+		//Debug.Log ("Start " + CurrentPosition); 
 		int i = -1;
 		foreach (string text in GuitarManager.instance.chordProgression) {
 			if(i>=0){
@@ -251,7 +251,6 @@ public class MazemanagerScript : MonoBehaviour {
 			}
 			CreateButton(text,CurrentPosition,(int)VisitPointer.x,(int)VisitPointer.y);
 			VisitMatrix [(int)VisitPointer.x, (int)VisitPointer.y] = true;
-			Debug.Log ((int)VisitPointer.x+"   "+(int)VisitPointer.y);
 			i++;
 		}
 		CurrentPosition = Start;

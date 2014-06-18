@@ -223,7 +223,6 @@ public class GuitarManager : MonoBehaviour {
 	public string addNewChord(string chordName)
 	//adds a new chord with name 'chordName' and chord value equal to the current state of the strings to the dictionary
 	{
-		Debug.Log ("New Chord method called!!");
 		ChordObject tempChordObj = new ChordObject();
 		tempChordObj.setChord((int)(strings[0].value*(1/fretPerc)), guitarStringsToPlay[0].value,
 		                      (int)(strings[1].value*(1/fretPerc)), guitarStringsToPlay[1].value,
@@ -235,9 +234,7 @@ public class GuitarManager : MonoBehaviour {
 		string newChordName = chordName;
 		while (chordDictionary.ContainsKey(newChordName)) 
 		{
-			Debug.Log("chord Dictionary contains new chord name");
 			newChordName = chordName + i;
-			Debug.Log(newChordName);
 			i++;
 		}
 
