@@ -234,7 +234,7 @@ public class GuitarManager : MonoBehaviour {
 		string newChordName = chordName;
 		while (chordDictionary.ContainsKey(newChordName)) 
 		{
-			newChordName = chordName + i;
+			newChordName = chordName + 'v' +i;
 			i++;
 		}
 
