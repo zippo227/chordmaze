@@ -39,8 +39,9 @@ public class ChordSelectButton : MonoBehaviour
 		gameObject.GetComponentInChildren<UILabel> ().text = chordName;
 	}
 
-	public void setName(string text)
+	public void setName(UILabel label, string text)
 	{
+		nameBox = label;
 		chordName = text;
 		//gameObject.GetComponentInChildren<UILabel> ().text = name;
 	}
