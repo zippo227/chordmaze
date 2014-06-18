@@ -373,6 +373,8 @@ public class GuitarManager : MonoBehaviour {
 		 * bool[] chordDictionary[chordName].getStringSettings()
 		 */
 
+		if (!chordDictionary.ContainsKey (chordName))
+						return false;
 		for (int i = 0; i<6; i++)
 		{
 			if(guitarStringsToPlay[i].value != chordDictionary[chordName].getStringSettings()[i])
