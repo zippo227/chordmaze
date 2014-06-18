@@ -13,7 +13,6 @@ public class AddToProgression : MonoBehaviour
 
 	public void addChord()
 	{
-		//show error if user is trying to re-make an original chord
 		//show error if user is trying to create a chord with no strings played
 		if (!manager.stringsPlaying()) 
 		{
@@ -36,7 +35,7 @@ public class AddToProgression : MonoBehaviour
 			//add chord to grid at bottom
 			GameObject newChord = (GameObject)Resources.Load ("ChordButton");
 			newChord.GetComponent<ChordSelectButton> ().setManager (manager.gameObject);
-			newChord.GetComponent<ChordSelectButton> ().setName (chordName);
+			newChord.GetComponent<ChordSelectButton> ().setName (nameBox, chordName);
 			newChord.GetComponent<ChordSelectButton> ().setStrings ();
 			newChord.GetComponent<UISprite> ().SetDimensions (84, 52);
 
