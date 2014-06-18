@@ -363,6 +363,34 @@ public class GuitarManager : MonoBehaviour {
 		return false;
 	}
 
+	//checkChordDifference returns false if the chord with key chordName in the dictionary is not equal to the 
+	//current string settings, and true if it is
+	public bool checkChordDifference(string chordName)
+	{
+		/* Guitar is currently set to:
+		 * public UIToggle[] guitarStringsToPlay;
+		 * public UISlider[] strings;
+		 *
+		 * Dictionary entry:
+		 * int[] chordDictionary[chordName].getStrings()
+		 * bool[] chordDictionary[chordName].getStringSettings()
+		 */
+
+		for (int i = 0; i<6; i++)
+		{
+			if(guitarStringsToPlay[i].value != chordDictionary[chordName].getStringSettings()[i])
+			{
+				return false;
+			}
+			if((int)(strings[i].value*(1/fretPerc)) != chordDictionary[chordName].getStrings()[i])
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+
 
 
 }

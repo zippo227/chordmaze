@@ -24,28 +24,37 @@ public class AddToProgression : MonoBehaviour
 
 			string chordName = nameBox.text;
 
-			//if the dictionary does not already have that note, add it
-			if (!manager.originalChords.Contains(nameBox.text)) 
+			//if the dictionary already has this note, but the note has been changed
+			if(manager.originalChords.Contains(nameBox.text) && !manager.checkChordDifference(nameBox.text))
 			{
-				chordName = manager.addNewChord(nameBox.text);
+				errorMsg.text = "Error: \n Trying to modify an original chord. Please change the chord's name.";
+				errorWindow.SetActive(true);
 			}
+			else
+			{
+				//if the dictionary does not already have that note, add it
+				if (!manager.originalChords.Contains(nameBox.text)) 
+				{
+					chordName = manager.addNewChord(nameBox.text);
+				}
 
-			manager.chordProgression.Add (chordName);
+				manager.chordProgression.Add (chordName);
 
-			//add chord to grid at bottom
-			GameObject newChord = (GameObject)Resources.Load ("ChordButton");
-			newChord.GetComponent<ChordSelectButton> ().setManager (manager.gameObject);
-			newChord.GetComponent<ChordSelectButton> ().setName (nameBox, chordName);
-			newChord.GetComponent<ChordSelectButton> ().setStrings ();
-			newChord.GetComponent<UISprite> ().SetDimensions (84, 52);
+				//add chord to grid at bottom
+				GameObject newChord = (GameObject)Resources.Load ("ChordButton");
+				newChord.GetComponent<ChordSelectButton> ().setManager (manager.gameObject);
+				newChord.GetComponent<ChordSelectButton> ().setName (nameBox, chordName);
+				newChord.GetComponent<ChordSelectButton> ().setStrings ();
+				newChord.GetComponent<UISprite> ().SetDimensions (84, 52);
 
-			NGUITools.AddChild (newChordGrid.gameObject, newChord);
-			//GameObject.Destroy (newChord);
-			newChordGrid.Reposition ();
+				NGUITools.AddChild (newChordGrid.gameObject, newChord);
+				//GameObject.Destroy (newChord);
+				newChordGrid.Reposition ();
 
-			//newChordGrid.GetChild (newChordGrid.GetChildList ().size - 1).GetComponent<ChordSelectButton> ().chordName = nameBox.text;
+				//newChordGrid.GetChild (newChordGrid.GetChildList ().size - 1).GetComponent<ChordSelectButton> ().chordName = nameBox.text;
 
-			//make more modifications to this button so it plays the correct note
+				//make more modifications to this button so it plays the correct note
+			}
 		}
 
 
