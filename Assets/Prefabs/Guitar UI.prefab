@@ -5919,6 +5919,7 @@ MonoBehaviour:
   guitarCam: {fileID: 100126}
   mazeCam: {fileID: 0}
   errorWindow: {fileID: 100338}
+  errorMsg: {fileID: 11400428}
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -7336,6 +7337,8 @@ MonoBehaviour:
   nameBox: {fileID: 11400242}
   listOfChords: {fileID: 0}
   newChordGrid: {fileID: 11400182}
+  errorWindow: {fileID: 100338}
+  errorMsg: {fileID: 11400428}
 --- !u!114 &11400080
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -14226,7 +14229,7 @@ MonoBehaviour:
   keepCrispWhenShrunk: 1
   mTrueTypeFont: {fileID: 0}
   mFont: {fileID: 11400000, guid: 29056518aafb01b49a5b08faf8e30cff, type: 2}
-  mText: "Error: \nProgression needs to be at least 5 chords long to continue."
+  mText: 
   mFontSize: 10
   mFontStyle: 0
   mAlignment: 0

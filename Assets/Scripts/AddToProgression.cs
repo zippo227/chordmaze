@@ -8,32 +8,46 @@ public class AddToProgression : MonoBehaviour
 	public UILabel listOfChords;
 	public UIGrid newChordGrid;
 
+	public GameObject errorWindow;
+	public UILabel errorMsg;
+
 	public void addChord()
 	{
-		string chordName = nameBox.text;
-
-		//if the dictionary does not already have that note, add it
-		if (!manager.originalChords.Contains(nameBox.text)) 
+		//show error if user is trying to re-make an original chord
+		//show error if user is trying to create a chord with no strings played
+		if (!manager.stringsPlaying()) 
 		{
-			chordName = manager.addNewChord(nameBox.text);
+			errorMsg.text = "Error: \n Cannot add chord with no strings being played.";
+			errorWindow.SetActive(true);
 		}
+		else
+		{
 
-		manager.chordProgression.Add (chordName);
+			string chordName = nameBox.text;
 
-		//add chord to grid at bottom
-		GameObject newChord = (GameObject)Resources.Load ("ChordButton");
-		newChord.GetComponent<ChordSelectButton> ().setManager (manager.gameObject);
-		newChord.GetComponent<ChordSelectButton> ().setName (chordName);
-		newChord.GetComponent<ChordSelectButton> ().setStrings ();
-		newChord.GetComponent<UISprite> ().SetDimensions (84, 52);
+			//if the dictionary does not already have that note, add it
+			if (!manager.originalChords.Contains(nameBox.text)) 
+			{
+				chordName = manager.addNewChord(nameBox.text);
+			}
 
-		NGUITools.AddChild (newChordGrid.gameObject, newChord);
-		//GameObject.Destroy (newChord);
-		newChordGrid.Reposition ();
+			manager.chordProgression.Add (chordName);
 
-		//newChordGrid.GetChild (newChordGrid.GetChildList ().size - 1).GetComponent<ChordSelectButton> ().chordName = nameBox.text;
+			//add chord to grid at bottom
+			GameObject newChord = (GameObject)Resources.Load ("ChordButton");
+			newChord.GetComponent<ChordSelectButton> ().setManager (manager.gameObject);
+			newChord.GetComponent<ChordSelectButton> ().setName (chordName);
+			newChord.GetComponent<ChordSelectButton> ().setStrings ();
+			newChord.GetComponent<UISprite> ().SetDimensions (84, 52);
 
-		//make more modifications to this button so it plays the correct note
+			NGUITools.AddChild (newChordGrid.gameObject, newChord);
+			//GameObject.Destroy (newChord);
+			newChordGrid.Reposition ();
+
+			//newChordGrid.GetChild (newChordGrid.GetChildList ().size - 1).GetComponent<ChordSelectButton> ().chordName = nameBox.text;
+
+			//make more modifications to this button so it plays the correct note
+		}
 
 
 	}

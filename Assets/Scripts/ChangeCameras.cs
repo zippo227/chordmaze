@@ -4,6 +4,7 @@ using System.Collections;
 public class ChangeCameras : MonoBehaviour 
 {
 	public GameObject guitarCam, mazeCam, errorWindow;
+	public UILabel errorMsg;
 
 	void Awake()
 	{
@@ -20,6 +21,7 @@ public class ChangeCameras : MonoBehaviour
 			SubmitStrings ();
 		} else 
 		{
+			errorMsg.text = "Error: \n Progression needs to be at least 5 chords long to continue.";
 			errorWindow.SetActive(true);
 		}
 

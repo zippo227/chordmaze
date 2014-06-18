@@ -352,6 +352,16 @@ public class GuitarManager : MonoBehaviour {
 
 	}
 
+	public bool stringsPlaying()
+	{
+		foreach(UIToggle toggle in guitarStringsToPlay)
+		{
+			if(toggle.value)
+				return true;
+		}
+
+		return false;
+	}
 
 
 
