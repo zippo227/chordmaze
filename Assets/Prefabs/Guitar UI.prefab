@@ -3643,7 +3643,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100136}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3871.30957, y: -117.009369, z: 0}
+  m_LocalPosition: {x: -3853.30811, y: -117.009369, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 400020}
@@ -8878,7 +8878,7 @@ MonoBehaviour:
   autoResizeBoxCollider: 0
   hideIfOffScreen: 0
   keepAspectRatio: 0
-  aspectRatio: 1.41805553
+  aspectRatio: 1.8416667
   mType: 1
   mFillDirection: 4
   mFillAmount: 1
@@ -9260,7 +9260,7 @@ MonoBehaviour:
   container: {fileID: 100020}
   side: 2
   runOnlyOnce: 1
-  relativeOffset: {x: .0359999985, y: -.370000005}
+  relativeOffset: {x: .0579999983, y: -.370000005}
   pixelOffset: {x: 0, y: 0}
   widgetContainer: {fileID: 0}
 --- !u!114 &11400182
@@ -12782,7 +12782,7 @@ MonoBehaviour:
   autoResizeBoxCollider: 0
   hideIfOffScreen: 0
   keepAspectRatio: 0
-  aspectRatio: 1.41805553
+  aspectRatio: 1.8416667
   mType: 2
   mFillDirection: 4
   mFillAmount: 1

@@ -115,7 +115,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  stringSettings: 020000000000000002000000010000000200000000000000
+  stringSettings: 000000000200000000000000020000000000000000000000
   myToggles:
   - {fileID: 0}
   - {fileID: 0}
@@ -123,9 +123,9 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  playString: 010101010100
+  playString: 010100010100
   nameBox: {fileID: 0}
-  chordName: B7
+  chordName: new chord
   playChordButton: {fileID: 0}
 --- !u!114 &11400002
 MonoBehaviour:
@@ -177,7 +177,7 @@ MonoBehaviour:
   mEffectColor: {r: 0, g: 0, b: 0, a: 1}
   mSymbols: 1
   mEffectDistance: {x: 1, y: 1}
-  mOverflow: 2
+  mOverflow: 0
   mMaterial: {fileID: 0}
   mApplyGradient: 1
   mGradientTop: {r: 1, g: 1, b: 1, a: 1}
@@ -227,19 +227,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   leftAnchor:
-    target: {fileID: 400002}
+    target: {fileID: 0}
     relative: 0
     absolute: -15
   rightAnchor:
-    target: {fileID: 400002}
+    target: {fileID: 0}
     relative: 1
     absolute: 15
   bottomAnchor:
-    target: {fileID: 400002}
+    target: {fileID: 0}
     relative: 0
     absolute: -10
   topAnchor:
-    target: {fileID: 400002}
+    target: {fileID: 0}
     relative: 1
     absolute: 10
   updateAnchors: 0
