@@ -24,6 +24,12 @@ public class AddToProgression : MonoBehaviour
 
 			string chordName = nameBox.text;
 
+			//if the dictionary already has this note, but the note has been changed
+			if(manager.originalChords.Contains(nameBox.text) && !manager.checkChordDifference(nameBox.text))
+			{
+				errorMsg.text = "Error: \n Trying to modify an original chord. Please change the chord's name.";
+				errorWindow.SetActive(true);
+			}
 			//if the dictionary does not already have that note, add it
 			if (!manager.originalChords.Contains(nameBox.text)) 
 			{
