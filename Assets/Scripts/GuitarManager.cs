@@ -202,13 +202,15 @@ public class GuitarManager : MonoBehaviour {
 	//adds a new chord with name 'chordName' and chord value equal to the current state of the strings to the dictionary
 	{
 		ChordObject tempChordObj = new ChordObject();
-		tempChordObj.setChord((int)strings[0].value, guitarStringsToPlay[0].value,
-		                      (int)strings[1].value, guitarStringsToPlay[1].value,
-		                      (int)strings[2].value, guitarStringsToPlay[2].value,
-		                      (int)strings[3].value, guitarStringsToPlay[3].value,
-		                      (int)strings[4].value, guitarStringsToPlay[4].value,
-		                      (int)strings[5].value, guitarStringsToPlay[5].value);
+		tempChordObj.setChord((int)(strings[0].value*(1/fretPerc)), guitarStringsToPlay[0].value,
+		                      (int)(strings[1].value*(1/fretPerc)), guitarStringsToPlay[1].value,
+		                      (int)(strings[2].value*(1/fretPerc)), guitarStringsToPlay[2].value,
+		                      (int)(strings[3].value*(1/fretPerc)), guitarStringsToPlay[3].value,
+		                      (int)(strings[4].value*(1/fretPerc)), guitarStringsToPlay[4].value,
+		                      (int)(strings[5].value*(1/fretPerc)), guitarStringsToPlay[5].value);
+
 		chordDictionary.Add(chordName, tempChordObj);
+
 	}
 
 	public void setChord(string name)
