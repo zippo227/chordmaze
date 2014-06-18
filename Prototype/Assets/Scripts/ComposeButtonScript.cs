@@ -11,7 +11,13 @@ public class ComposeButtonScript : MonoBehaviour {
 	}
 	
 	public void SubmitInput(){
-		ComposeManagerScript.instance.CreateLabels (MyInput.value);
+		if (MyInput.value.Length != 0) {
+			ComposeManagerScript.instance.CreateLabels (MyInput.value);
 		MyInput.value = "";
+		} 
+		else {
+			Debug.Log ("Empty Message!");
+		}
+
 	}
 }
