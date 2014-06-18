@@ -10,18 +10,20 @@ public class AddToProgression : MonoBehaviour
 
 	public void addChord()
 	{
-		manager.chordProgression.Add (nameBox.text);
+		string chordName = nameBox.text;
 
 		//if the dictionary does not already have that note, add it
-		if (!manager.chordDictionary.ContainsKey (nameBox.text)) 
+		if (!manager.originalChords.Contains(nameBox.text)) 
 		{
-			manager.addNewChord(nameBox.text);
+			chordName = manager.addNewChord(nameBox.text);
 		}
+
+		manager.chordProgression.Add (chordName);
 
 		//add chord to grid at bottom
 		GameObject newChord = (GameObject)Resources.Load ("ChordButton");
 		newChord.GetComponent<ChordSelectButton> ().setManager (manager.gameObject);
-		newChord.GetComponent<ChordSelectButton> ().setName (nameBox);
+		newChord.GetComponent<ChordSelectButton> ().setName (chordName);
 		newChord.GetComponent<ChordSelectButton> ().setStrings ();
 		newChord.GetComponent<UISprite> ().SetDimensions (84, 52);
 

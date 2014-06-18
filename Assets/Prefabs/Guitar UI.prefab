@@ -7534,6 +7534,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   chordProgression: []
+  originalChords: []
   guitarStringsToPlay:
   - {fileID: 11400336}
   - {fileID: 11400054}
