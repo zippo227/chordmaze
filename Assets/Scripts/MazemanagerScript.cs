@@ -69,9 +69,12 @@ public class MazemanagerScript : MonoBehaviour {
 			UIButton OldButtonScript = (UIButton)CurrentChoosingChord.GetComponent<UIButton> ();
 			OldButtonScript.defaultColor = DefalutColor;
 		}
-		CurrentChoosingChord = NewButton;
-		UIButton MyButton = (UIButton)CurrentChoosingChord.GetComponent<UIButton> ();
-		MyButton.defaultColor = MyButton.hover;
+
+		UIButton MyButton = (UIButton)NewButton.GetComponent<UIButton> ();
+		if (MyButton.defaultColor != MyButton.pressed) {
+			CurrentChoosingChord = NewButton;
+			MyButton.defaultColor = MyButton.hover;
+		}
 	}
 
 	public void AddChord(){
@@ -194,7 +197,7 @@ public class MazemanagerScript : MonoBehaviour {
 		Debug.Log (GuitarManager.instance.chordProgression.Count);
 		CenterofScreen = new Vector3 (0, 0, 0);
 		MazeWidth = 300.0f;
-		MazeHeight = 200.0f; 
+		MazeHeight = 300.0f; 
 		MaxUpSteps = (int)(ChordSteps * (MazeHeight / (MazeWidth + MazeHeight)));
 		RandomStep (MySteps, ref up, ref right, ChordSteps);
 		GetTheLengthOfButton (up, right, ref SidelenOfButton, MazeWidth, MazeHeight);
