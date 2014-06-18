@@ -382,7 +382,7 @@ public class GuitarManager : MonoBehaviour {
 			{
 				return false;
 			}
-			if(strings[i].value*(1f/fretPerc) != chordDictionary[chordName].getStrings()[i]);
+			if((int)(strings[i].value*(1/fretPerc)) != chordDictionary[chordName].getStrings()[i])
 			{
 				return false;
 			}
