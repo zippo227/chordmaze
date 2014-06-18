@@ -4,6 +4,7 @@ using System.Collections;
 public class NoteLabel : MonoBehaviour {
 	
 	public UISlider slider;
+	public UILabel chordLabel;
 	public enum noteValue
 		{
 			A, B, C, D, E, F, G
@@ -29,6 +30,9 @@ public class NoteLabel : MonoBehaviour {
 				newLabelValue -= 12;
 
 		label.text = LabelValues [newLabelValue];
+
+		chordLabel.text = "new chord";
+
 	}
 
 	void setupInitVal()

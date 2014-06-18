@@ -3700,7 +3700,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100146}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -4.048522, y: -.303798139, z: 0}
   m_LocalScale: {x: .00277777785, y: .00277777785, z: .00277777785}
   m_Children:
   - {fileID: 400120}
@@ -6430,7 +6430,7 @@ MonoBehaviour:
   alwaysOnScreen: 0
   anchorOffset: 0
   renderQueue: 0
-  startingRenderQueue: 3001
+  startingRenderQueue: 3003
   mAlpha: 1
   mClipping: 3
   mClipRange: {x: 3805.00317, y: -129.000916, z: 800.004395, w: 92.0000153}
@@ -6577,6 +6577,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slider: {fileID: 11400166}
+  chordLabel: {fileID: 11400242}
   initialValue: 6
 --- !u!114 &11400040
 MonoBehaviour:
@@ -7533,7 +7534,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   chordProgression: []
-  tempProgression: []
   guitarStringsToPlay:
   - {fileID: 11400336}
   - {fileID: 11400054}
@@ -8340,7 +8340,7 @@ MonoBehaviour:
   alwaysOnScreen: 0
   anchorOffset: 0
   renderQueue: 0
-  startingRenderQueue: 3001
+  startingRenderQueue: 3002
   mAlpha: 1
   mClipping: 3
   mClipRange: {x: -54.9955444, y: -28.9999695, z: 799.99707, w: 92}
@@ -8902,6 +8902,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slider: {fileID: 11400096}
+  chordLabel: {fileID: 11400242}
   initialValue: 1
 --- !u!114 &11400164
 MonoBehaviour:
@@ -9253,7 +9254,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8077b76001d36d489868d20d28bddb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiCamera: {fileID: 0}
+  uiCamera: {fileID: 2000000}
   container: {fileID: 100020}
   side: 2
   runOnlyOnce: 1
@@ -10633,7 +10634,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 100186}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 190745643210d4ba3b29d7ebfcb1098b, type: 3}
+  m_Script: {fileID: 0}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &11400250
@@ -11170,6 +11171,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slider: {fileID: 11400064}
+  chordLabel: {fileID: 11400242}
   initialValue: 4
 --- !u!114 &11400274
 MonoBehaviour:
@@ -12302,7 +12304,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8077b76001d36d489868d20d28bddb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiCamera: {fileID: 0}
+  uiCamera: {fileID: 2000000}
   container: {fileID: 100092}
   side: 2
   runOnlyOnce: 1
@@ -12815,6 +12817,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slider: {fileID: 11400042}
+  chordLabel: {fileID: 11400242}
   initialValue: 3
 --- !u!114 &11400358
 MonoBehaviour:
@@ -13156,6 +13159,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slider: {fileID: 11400144}
+  chordLabel: {fileID: 11400242}
   initialValue: 4
 --- !u!114 &11400378
 MonoBehaviour:
@@ -13580,7 +13584,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 100306}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3136f41ffe6784b9ebc4469cbd4e91ec, type: 3}
+  m_Script: {fileID: 0}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &11400400
@@ -13701,6 +13705,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slider: {fileID: 11400238}
+  chordLabel: {fileID: 11400242}
   initialValue: 0
 --- !u!114 &11400408
 MonoBehaviour:
