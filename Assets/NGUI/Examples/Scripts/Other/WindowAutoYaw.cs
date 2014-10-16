@@ -19,13 +19,14 @@ public class WindowAutoYaw : MonoBehaviour
 		mTrans.localRotation = Quaternion.identity;
 	}
 
-	void OnEnable ()
+	void Start ()
 	{
 		if (uiCamera == null) uiCamera = NGUITools.FindCameraForLayer(gameObject.layer);
 		mTrans = transform;
+		UpdateManager.AddCoroutine(this, updateOrder, CoroutineUpdate);
 	}
 
-	void Update ()
+	void CoroutineUpdate (float delta)
 	{
 		if (uiCamera != null)
 		{

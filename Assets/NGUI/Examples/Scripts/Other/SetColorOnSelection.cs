@@ -11,12 +11,11 @@ public class SetColorOnSelection : MonoBehaviour
 {
 	UIWidget mWidget;
 
-	public void SetSpriteBySelection ()
+	void OnSelectionChange (string val)
 	{
-		if (UIPopupList.current == null) return;
 		if (mWidget == null) mWidget = GetComponent<UIWidget>();
 
-		switch (UIPopupList.current.value)
+		switch (val)
 		{
 			case "White":	mWidget.color = Color.white;	break;
 			case "Red":		mWidget.color = Color.red;		break;

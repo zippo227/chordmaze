@@ -1,6 +1,6 @@
 //----------------------------------------------
 //            NGUI: Next-Gen UI kit
-// Copyright © 2011-2014 Tasharen Entertainment
+// Copyright © 2011-2013 Tasharen Entertainment
 //----------------------------------------------
 
 using UnityEngine;
@@ -26,6 +26,8 @@ public class UIAnchor : MonoBehaviour
 		Center,
 	}
 
+	bool mNeedsHalfPixelOffset = false;
+
 	/// <summary>
 	/// Camera used to determine the anchor bounds. Set automatically if none was specified.
 	/// </summary>
@@ -33,10 +35,16 @@ public class UIAnchor : MonoBehaviour
 	public Camera uiCamera = null;
 
 	/// <summary>
-	/// Object used to determine the container's bounds. Overwrites the camera-based anchoring if the value was specified.
+	/// Widget used to determine the container's bounds. Overwrites the camera-based anchoring if the value was specified.
 	/// </summary>
 
-	public GameObject container = null;
+	public UIWidget widgetContainer = null;
+
+	/// <summary>
+	/// Panel used to determine the container's bounds. Overwrites the widget-based anchoring if the value was specified.
+	/// </summary>
+
+	public UIPanel panelContainer = null;
 
 	/// <summary>
 	/// Side or corner to anchor to.
@@ -45,11 +53,17 @@ public class UIAnchor : MonoBehaviour
 	public Side side = Side.Center;
 
 	/// <summary>
-	/// If set to 'true', UIAnchor will execute once, then will be disabled.
-	/// Screen size changes will still cause the anchor to update itself, even if it's disabled.
+	/// Whether a half-pixel offset will be applied on windows machines. Most of the time you'll want to leave this as 'true'.
+	/// This value is only used if the widget and panel containers were not specified.
 	/// </summary>
 
-	public bool runOnlyOnce = true;
+	public bool halfPixelOffset = true;
+
+	/// <summary>
+	/// If set to 'true', UIAnchor will execute once, then will be removed. Useful if your screen resolution never changes.
+	/// </summary>
+
+	public bool runOnlyOnce = false;
 
 	/// <summary>
 	/// Relative offset value, if any. For example "0.25" with 'side' set to Left, means 25% from the left side.
@@ -64,25 +78,16 @@ public class UIAnchor : MonoBehaviour
 	
 	public Vector2 pixelOffset = Vector2.zero;
 
-	// Deprecated legacy functionality
-	[HideInInspector][SerializeField] UIWidget widgetContainer;
-
 	Transform mTrans;
 	Animation mAnim;
 	Rect mRect = new Rect();
 	UIRoot mRoot;
-	bool mStarted = false;
 
 	void Awake ()
 	{
 		mTrans = transform;
 		mAnim = animation;
-		UICamera.onScreenResize += ScreenSizeChanged;
 	}
-
-	void OnDestroy () { UICamera.onScreenResize -= ScreenSizeChanged; }
-
-	void ScreenSizeChanged () { if (mStarted && runOnlyOnce) Update(); }
 
 	/// <summary>
 	/// Automatically find the camera responsible for drawing the widgets under this object.
@@ -90,21 +95,17 @@ public class UIAnchor : MonoBehaviour
 
 	void Start ()
 	{
-		if (container == null && widgetContainer != null)
-		{
-			container = widgetContainer.gameObject;
-			widgetContainer = null;
-#if UNITY_EDITOR
-			NGUITools.SetDirty(this);
-#endif
-		}
-
 		mRoot = NGUITools.FindInParents<UIRoot>(gameObject);
-		if (uiCamera == null) uiCamera = NGUITools.FindCameraForLayer(gameObject.layer);
-		
-		Update();
+		mNeedsHalfPixelOffset = (Application.platform == RuntimePlatform.WindowsPlayer ||
+			Application.platform == RuntimePlatform.XBOX360 ||
+			Application.platform == RuntimePlatform.WindowsWebPlayer ||
+			Application.platform == RuntimePlatform.WindowsEditor);
 
-		mStarted = true;
+		// Only DirectX 9 needs the half-pixel offset
+		if (mNeedsHalfPixelOffset) mNeedsHalfPixelOffset = (SystemInfo.graphicsShaderLevel < 40);
+
+		if (uiCamera == null) uiCamera = NGUITools.FindCameraForLayer(gameObject.layer);
+		Update();
 	}
 
 	/// <summary>
@@ -117,22 +118,9 @@ public class UIAnchor : MonoBehaviour
 
 		bool useCamera = false;
 
-		UIWidget wc = (container == null) ? null : container.GetComponent<UIWidget>();
-		UIPanel pc = (container == null && wc == null) ? null : container.GetComponent<UIPanel>();
-
-		if (wc != null)
+		if (panelContainer != null)
 		{
-			Bounds b = wc.CalculateBounds(container.transform.parent);
-
-			mRect.x = b.min.x;
-			mRect.y = b.min.y;
-
-			mRect.width = b.size.x;
-			mRect.height = b.size.y;
-		}
-		else if (pc != null)
-		{
-			if (pc.clipping == UIDrawCall.Clipping.None)
+			if (panelContainer.clipping == UIDrawCall.Clipping.None)
 			{
 				// Panel has no clipping -- just use the screen's dimensions
 				float ratio = (mRoot != null) ? (float)mRoot.activeHeight / Screen.height * 0.5f : 0.5f;
@@ -144,24 +132,32 @@ public class UIAnchor : MonoBehaviour
 			else
 			{
 				// Panel has clipping -- use it as the mRect
-				Vector4 pos = pc.finalClipRegion;
+				Vector4 pos = panelContainer.clipRange;
 				mRect.x = pos.x - (pos.z * 0.5f);
 				mRect.y = pos.y - (pos.w * 0.5f);
 				mRect.width = pos.z;
 				mRect.height = pos.w;
 			}
 		}
-		else if (container != null)
+		else if (widgetContainer != null)
 		{
-			Transform root = container.transform.parent;
-			Bounds b = (root != null) ? NGUIMath.CalculateRelativeWidgetBounds(root, container.transform) :
-				NGUIMath.CalculateRelativeWidgetBounds(container.transform);
+			// Widget is used -- use its bounds as the container's bounds
+			Transform t = widgetContainer.cachedTransform;
+			Vector3 ls = t.localScale;
+			Vector3 lp = t.localPosition;
 
-			mRect.x = b.min.x;
-			mRect.y = b.min.y;
+			Vector3 size = widgetContainer.relativeSize;
+			Vector3 offset = widgetContainer.pivotOffset;
+			offset.y -= 1f;
 
-			mRect.width = b.size.x;
-			mRect.height = b.size.y;
+			offset.x *= (widgetContainer.relativeSize.x * ls.x);
+			offset.y *= (widgetContainer.relativeSize.y * ls.y);
+
+			mRect.x = lp.x + offset.x;
+			mRect.y = lp.y + offset.y;
+
+			mRect.width = size.x * ls.x;
+			mRect.height = size.y * ls.y;
 		}
 		else if (uiCamera != null)
 		{
@@ -188,8 +184,8 @@ public class UIAnchor : MonoBehaviour
 		float width = mRect.width;
 		float height = mRect.height;
 
-		v.x += pixelOffset.x + relativeOffset.x * width;
-		v.y += pixelOffset.y + relativeOffset.y * height;
+		v.x += relativeOffset.x * width;
+		v.y += relativeOffset.y * height;
 
 		if (useCamera)
 		{
@@ -197,8 +193,16 @@ public class UIAnchor : MonoBehaviour
 			{
 				v.x = Mathf.Round(v.x);
 				v.y = Mathf.Round(v.y);
-			}
 
+				v.x += pixelOffset.x;
+				v.y += pixelOffset.y;
+
+				if (halfPixelOffset && mNeedsHalfPixelOffset)
+				{
+					v.x -= 0.5f;
+					v.y += 0.5f;
+				}
+			}
 			v.z = uiCamera.WorldToScreenPoint(mTrans.position).z;
 			v = uiCamera.ScreenToWorldPoint(v);
 		}
@@ -207,13 +211,16 @@ public class UIAnchor : MonoBehaviour
 			v.x = Mathf.Round(v.x);
 			v.y = Mathf.Round(v.y);
 
-			if (pc != null)
+			v.x += pixelOffset.x;
+			v.y += pixelOffset.y;
+
+			if (panelContainer != null)
 			{
-				v = pc.cachedTransform.TransformPoint(v);
+				v = panelContainer.cachedTransform.TransformPoint(v);
 			}
-			else if (container != null)
+			else if (widgetContainer != null)
 			{
-				Transform t = container.transform.parent;
+				Transform t = widgetContainer.cachedTransform.parent;
 				if (t != null) v = t.TransformPoint(v);
 			}
 			v.z = mTrans.position.z;
@@ -221,6 +228,6 @@ public class UIAnchor : MonoBehaviour
 
 		// Wrapped in an 'if' so the scene doesn't get marked as 'edited' every frame
 		if (mTrans.position != v) mTrans.position = v;
-		if (runOnlyOnce && Application.isPlaying) enabled = false;
+		if (runOnlyOnce && Application.isPlaying) Destroy(this);
 	}
 }

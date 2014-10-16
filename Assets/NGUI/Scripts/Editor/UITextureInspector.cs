@@ -1,6 +1,6 @@
-//----------------------------------------------
+﻿//----------------------------------------------
 //            NGUI: Next-Gen UI kit
-// Copyright © 2011-2014 Tasharen Entertainment
+// Copyright © 2011-2013 Tasharen Entertainment
 //----------------------------------------------
 
 using UnityEngine;
@@ -11,9 +11,8 @@ using System.Collections.Generic;
 /// Inspector class used to edit UITextures.
 /// </summary>
 
-[CanEditMultipleObjects]
-[CustomEditor(typeof(UITexture), true)]
-public class UITextureInspector : UIBasicSpriteEditor
+[CustomEditor(typeof(UITexture))]
+public class UITextureInspector : UIWidgetInspector
 {
 	UITexture mTex;
 
@@ -23,25 +22,49 @@ public class UITextureInspector : UIBasicSpriteEditor
 		mTex = target as UITexture;
 	}
 
-	protected override bool ShouldDrawProperties ()
+	protected override bool DrawProperties ()
 	{
-		if (target == null) return false;
-		SerializedProperty sp = NGUIEditorTools.DrawProperty("Texture", serializedObject, "mTexture");
-		NGUIEditorTools.DrawProperty("Material", serializedObject, "mMat");
-
-		if (sp != null) NGUISettings.texture = sp.objectReferenceValue as Texture;
-
-		if (mTex != null && (mTex.material == null || serializedObject.isEditingMultipleObjects))
+		if (mTex.material != null || mTex.mainTexture == null)
 		{
-			NGUIEditorTools.DrawProperty("Shader", serializedObject, "mShader");
+			Material mat = EditorGUILayout.ObjectField("Material", mTex.material, typeof(Material), false) as Material;
+
+			if (mTex.material != mat)
+			{
+				NGUIEditorTools.RegisterUndo("Material Selection", mTex);
+				mTex.material = mat;
+			}
 		}
 
-		EditorGUI.BeginDisabledGroup(mTex == null || mTex.mainTexture == null || serializedObject.isEditingMultipleObjects);
+		if (mTex.material == null || mTex.hasDynamicMaterial)
+		{
+			Shader shader = EditorGUILayout.ObjectField("Shader", mTex.shader, typeof(Shader), false) as Shader;
 
-		NGUIEditorTools.DrawRectProperty("UV Rect", serializedObject, "mRect");
+			if (mTex.shader != shader)
+			{
+				NGUIEditorTools.RegisterUndo("Shader Selection", mTex);
+				mTex.shader = shader;
+			}
 
-		EditorGUI.EndDisabledGroup();
-		return true;
+			Texture tex = EditorGUILayout.ObjectField("Texture", mTex.mainTexture, typeof(Texture), false) as Texture;
+
+			if (mTex.mainTexture != tex)
+			{
+				NGUIEditorTools.RegisterUndo("Texture Selection", mTex);
+				mTex.mainTexture = tex;
+			}
+		}
+
+		if (mTex.mainTexture != null)
+		{
+			Rect rect = EditorGUILayout.RectField("UV Rectangle", mTex.uvRect);
+
+			if (rect != mTex.uvRect)
+			{
+				NGUIEditorTools.RegisterUndo("UV Rectangle Change", mTex);
+				mTex.uvRect = rect;
+			}
+		}
+		return (mWidget.material != null);
 	}
 
 	/// <summary>
@@ -50,8 +73,7 @@ public class UITextureInspector : UIBasicSpriteEditor
 
 	public override bool HasPreviewGUI ()
 	{
-		return (Selection.activeGameObject == null || Selection.gameObjects.Length == 1) &&
-			(mTex != null) && (mTex.mainTexture as Texture2D != null);
+		return (mTex != null) && (mTex.mainTexture as Texture2D != null);
 	}
 
 	/// <summary>
@@ -64,12 +86,9 @@ public class UITextureInspector : UIBasicSpriteEditor
 
 		if (tex != null)
 		{
-			Rect tc = mTex.uvRect;
-			tc.xMin *= tex.width;
-			tc.xMax *= tex.width;
-			tc.yMin *= tex.height;
-			tc.yMax *= tex.height;
-			NGUIEditorTools.DrawSprite(tex, rect, mTex.color, tc, mTex.border);
+			Rect uv = mTex.uvRect;
+			Rect outer = NGUIMath.ConvertToPixels(uv, tex.width, tex.height, true);
+			NGUIEditorTools.DrawSprite(tex, rect, outer, outer, uv, mTex.color);
 		}
 	}
 }

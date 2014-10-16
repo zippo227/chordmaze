@@ -15,20 +15,26 @@ public class LagPosition : MonoBehaviour
 	Vector3 mRelative;
 	Vector3 mAbsolute;
 
-	void OnEnable ()
+	void Start ()
+	{
+		mTrans = transform;
+		mRelative = mTrans.localPosition;
+		if (ignoreTimeScale) UpdateManager.AddCoroutine(this, updateOrder, CoroutineUpdate);
+		else UpdateManager.AddLateUpdate(this, updateOrder, CoroutineUpdate);
+	}
+
+	void OnEnable()
 	{
 		mTrans = transform;
 		mAbsolute = mTrans.position;
-		mRelative = mTrans.localPosition;
 	}
 
-	void Update ()
+	void CoroutineUpdate (float delta)
 	{
 		Transform parent = mTrans.parent;
 		
 		if (parent != null)
 		{
-			float delta = ignoreTimeScale ? RealTime.deltaTime : Time.deltaTime;
 			Vector3 target = parent.position + parent.rotation * mRelative;
 			mAbsolute.x = Mathf.Lerp(mAbsolute.x, target.x, Mathf.Clamp01(delta * speed.x));
 			mAbsolute.y = Mathf.Lerp(mAbsolute.y, target.y, Mathf.Clamp01(delta * speed.y));

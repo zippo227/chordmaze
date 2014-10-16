@@ -15,20 +15,21 @@ public class LagRotation : MonoBehaviour
 	Quaternion mRelative;
 	Quaternion mAbsolute;
 	
-	void OnEnable()
+	void Start()
 	{
 		mTrans = transform;
 		mRelative = mTrans.localRotation;
 		mAbsolute = mTrans.rotation;
+		if (ignoreTimeScale) UpdateManager.AddCoroutine(this, updateOrder, CoroutineUpdate);
+		else UpdateManager.AddLateUpdate(this, updateOrder, CoroutineUpdate);
 	}
 
-	void Update ()
+	void CoroutineUpdate (float delta)
 	{
 		Transform parent = mTrans.parent;
 		
 		if (parent != null)
 		{
-			float delta = ignoreTimeScale ? RealTime.deltaTime : Time.deltaTime;
 			mAbsolute = Quaternion.Slerp(mAbsolute, parent.rotation * mRelative, delta * speed);
 			mTrans.rotation = mAbsolute;
 		}

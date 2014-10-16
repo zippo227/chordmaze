@@ -1,6 +1,6 @@
 //----------------------------------------------
 //            NGUI: Next-Gen UI kit
-// Copyright © 2011-2014 Tasharen Entertainment
+// Copyright © 2011-2013 Tasharen Entertainment
 //----------------------------------------------
 
 using UnityEngine;
@@ -14,9 +14,11 @@ using System;
 [AddComponentMenu("NGUI/UI/Atlas")]
 public class UIAtlas : MonoBehaviour
 {
-	// Legacy functionality, removed in 3.0. Do not use.
+	// Ideally this class should be called UISpriteData and should be separate from UIAtlas...
+	// But unfortunately I can't rename it or move it out as it will break backwards compatibility.
+
 	[System.Serializable]
-	class Sprite
+	public class Sprite
 	{
 		public string name = "Unity Bug";
 		public Rect outer = new Rect(0f, 0f, 1f, 1f);
@@ -33,10 +35,13 @@ public class UIAtlas : MonoBehaviour
 	}
 
 	/// <summary>
-	/// Legacy functionality, removed in 3.0. Do not use.
+	/// Pixels coordinates are values within the texture specified in pixels. They are more intuitive,
+	/// but will likely change if the texture gets resized. TexCoord coordinates range from 0 to 1,
+	/// and won't change if the texture is resized. You can switch freely from one to the other prior
+	/// to modifying the texture used by the atlas.
 	/// </summary>
 
-	enum Coordinates
+	public enum Coordinates
 	{
 		Pixels,
 		TexCoords,
@@ -46,17 +51,16 @@ public class UIAtlas : MonoBehaviour
 	[HideInInspector][SerializeField] Material material;
 
 	// List of all sprites inside the atlas. Name is kept only for backwards compatibility, it used to be public.
-	[HideInInspector][SerializeField] List<UISpriteData> mSprites = new List<UISpriteData>();
+	[HideInInspector][SerializeField] List<Sprite> sprites = new List<Sprite>();
+
+	// Currently active set of coordinates
+	[HideInInspector][SerializeField] Coordinates mCoordinates = Coordinates.Pixels;
 
 	// Size in pixels for the sake of MakePixelPerfect functions.
 	[HideInInspector][SerializeField] float mPixelSize = 1f;
 
 	// Replacement atlas can be used to completely bypass this atlas, pulling the data from another one instead.
 	[HideInInspector][SerializeField] UIAtlas mReplacement;
-
-	// Legacy functionality -- do not use
-	[HideInInspector][SerializeField] Coordinates mCoordinates = Coordinates.Pixels;
-	[HideInInspector][SerializeField] List<Sprite> sprites = new List<Sprite>();
 
 	// Whether the atlas is using a pre-multiplied alpha material. -1 = not checked. 0 = no. 1 = yes.
 	int mPMA = -1;
@@ -86,10 +90,10 @@ public class UIAtlas : MonoBehaviour
 				}
 				else
 				{
-					MarkAsChanged();
+					MarkAsDirty();
 					mPMA = -1;
 					material = value;
-					MarkAsChanged();
+					MarkAsDirty();
 				}
 			}
 		}
@@ -118,24 +122,16 @@ public class UIAtlas : MonoBehaviour
 	/// List of sprites within the atlas.
 	/// </summary>
 
-	public List<UISpriteData> spriteList
+	public List<Sprite> spriteList
 	{
 		get
 		{
-			if (mReplacement != null) return mReplacement.spriteList;
-			if (mSprites.Count == 0) Upgrade();
-			return mSprites;
+			return (mReplacement != null) ? mReplacement.spriteList : sprites;
 		}
 		set
 		{
-			if (mReplacement != null)
-			{
-				mReplacement.spriteList = value;
-			}
-			else
-			{
-				mSprites = value;
-			}
+			if (mReplacement != null) mReplacement.spriteList = value;
+			else sprites = value;
 		}
 	}
 
@@ -144,6 +140,52 @@ public class UIAtlas : MonoBehaviour
 	/// </summary>
 
 	public Texture texture { get { return (mReplacement != null) ? mReplacement.texture : (material != null ? material.mainTexture as Texture : null); } }
+
+	/// <summary>
+	/// Allows switching of the coordinate system from pixel coordinates to texture coordinates.
+	/// </summary>
+
+	public Coordinates coordinates
+	{
+		get
+		{
+			return (mReplacement != null) ? mReplacement.coordinates : mCoordinates;
+		}
+		set
+		{
+			if (mReplacement != null)
+			{
+				mReplacement.coordinates = value;
+			}
+			else if (mCoordinates != value)
+			{
+				if (material == null || material.mainTexture == null)
+				{
+					Debug.LogError("Can't switch coordinates until the atlas material has a valid texture");
+					return;
+				}
+
+				mCoordinates = value;
+				Texture tex = material.mainTexture;
+
+				for (int i = 0, imax = sprites.Count; i < imax; ++i)
+				{
+					Sprite s = sprites[i];
+
+					if (mCoordinates == Coordinates.TexCoords)
+					{
+						s.outer = NGUIMath.ConvertToTexCoords(s.outer, tex.width, tex.height);
+						s.inner = NGUIMath.ConvertToTexCoords(s.inner, tex.width, tex.height);
+					}
+					else
+					{
+						s.outer = NGUIMath.ConvertToPixels(s.outer, tex.width, tex.height, true);
+						s.inner = NGUIMath.ConvertToPixels(s.inner, tex.width, tex.height, true);
+					}
+				}
+			}
+		}
+	}
 
 	/// <summary>
 	/// Pixel size is a multiplier applied to widgets dimensions when performing MakePixelPerfect() pixel correction.
@@ -170,7 +212,7 @@ public class UIAtlas : MonoBehaviour
 				if (mPixelSize != val)
 				{
 					mPixelSize = val;
-					MarkAsChanged();
+					MarkAsDirty();
 				}
 			}
 		}
@@ -196,10 +238,9 @@ public class UIAtlas : MonoBehaviour
 			if (mReplacement != rep)
 			{
 				if (rep != null && rep.replacement == this) rep.replacement = null;
-				if (mReplacement != null) MarkAsChanged();
+				if (mReplacement != null) MarkAsDirty();
 				mReplacement = rep;
-				if (rep != null) material = null;
-				MarkAsChanged();
+				MarkAsDirty();
 			}
 		}
 	}
@@ -208,7 +249,7 @@ public class UIAtlas : MonoBehaviour
 	/// Convenience function that retrieves a sprite by name.
 	/// </summary>
 
-	public UISpriteData GetSprite (string name)
+	public Sprite GetSprite (string name)
 	{
 		if (mReplacement != null)
 		{
@@ -216,31 +257,25 @@ public class UIAtlas : MonoBehaviour
 		}
 		else if (!string.IsNullOrEmpty(name))
 		{
-			if (mSprites.Count == 0) Upgrade();
-
-			for (int i = 0, imax = mSprites.Count; i < imax; ++i)
+			for (int i = 0, imax = sprites.Count; i < imax; ++i)
 			{
-				UISpriteData s = mSprites[i];
+				Sprite s = sprites[i];
 
 				// string.Equals doesn't seem to work with Flash export
 				if (!string.IsNullOrEmpty(s.name) && name == s.name)
+				{
 					return s;
+				}
 			}
 		}
 		return null;
 	}
 
 	/// <summary>
-	/// Sort the list of sprites within the atlas, making them alphabetical.
+	/// Function used for sorting in the GetListOfSprites() function below.
 	/// </summary>
 
-	public void SortAlphabetically ()
-	{
-		mSprites.Sort(delegate(UISpriteData s1, UISpriteData s2) { return s1.name.CompareTo(s2.name); });
-#if UNITY_EDITOR
-		NGUITools.SetDirty(this);
-#endif
-	}
+	static int CompareString (string a, string b) { return a.CompareTo(b); }
 
 	/// <summary>
 	/// Convenience function that retrieves a list of all sprite names.
@@ -249,15 +284,14 @@ public class UIAtlas : MonoBehaviour
 	public BetterList<string> GetListOfSprites ()
 	{
 		if (mReplacement != null) return mReplacement.GetListOfSprites();
-		if (mSprites.Count == 0) Upgrade();
-
 		BetterList<string> list = new BetterList<string>();
 		
-		for (int i = 0, imax = mSprites.Count; i < imax; ++i)
+		for (int i = 0, imax = sprites.Count; i < imax; ++i)
 		{
-			UISpriteData s = mSprites[i];
+			Sprite s = sprites[i];
 			if (s != null && !string.IsNullOrEmpty(s.name)) list.Add(s.name);
 		}
+		//list.Sort(CompareString);
 		return list;
 	}
 
@@ -267,16 +301,14 @@ public class UIAtlas : MonoBehaviour
 
 	public BetterList<string> GetListOfSprites (string match)
 	{
-		if (mReplacement) return mReplacement.GetListOfSprites(match);
+		if (mReplacement != null) return mReplacement.GetListOfSprites(match);
 		if (string.IsNullOrEmpty(match)) return GetListOfSprites();
-
-		if (mSprites.Count == 0) Upgrade();
 		BetterList<string> list = new BetterList<string>();
 
 		// First try to find an exact match
-		for (int i = 0, imax = mSprites.Count; i < imax; ++i)
+		for (int i = 0, imax = sprites.Count; i < imax; ++i)
 		{
-			UISpriteData s = mSprites[i];
+			Sprite s = sprites[i];
 			
 			if (s != null && !string.IsNullOrEmpty(s.name) && string.Equals(match, s.name, StringComparison.OrdinalIgnoreCase))
 			{
@@ -290,9 +322,9 @@ public class UIAtlas : MonoBehaviour
 		for (int i = 0; i < keywords.Length; ++i) keywords[i] = keywords[i].ToLower();
 
 		// Try to find all sprites where all keywords are present
-		for (int i = 0, imax = mSprites.Count; i < imax; ++i)
+		for (int i = 0, imax = sprites.Count; i < imax; ++i)
 		{
-			UISpriteData s = mSprites[i];
+			Sprite s = sprites[i];
 			
 			if (s != null && !string.IsNullOrEmpty(s.name))
 			{
@@ -306,6 +338,7 @@ public class UIAtlas : MonoBehaviour
 				if (matches == keywords.Length) list.Add(s.name);
 			}
 		}
+		//list.Sort(CompareString);
 		return list;
 	}
 
@@ -334,12 +367,12 @@ public class UIAtlas : MonoBehaviour
 	/// Mark all widgets associated with this atlas as having changed.
 	/// </summary>
 
-	public void MarkAsChanged ()
+	public void MarkAsDirty ()
 	{
 #if UNITY_EDITOR
-		NGUITools.SetDirty(gameObject);
+		UnityEditor.EditorUtility.SetDirty(gameObject);
 #endif
-		if (mReplacement != null) mReplacement.MarkAsChanged();
+		if (mReplacement != null) mReplacement.MarkAsDirty();
 
 		UISprite[] list = NGUITools.FindActive<UISprite>();
 
@@ -353,7 +386,7 @@ public class UIAtlas : MonoBehaviour
 				sp.atlas = null;
 				sp.atlas = atl;
 #if UNITY_EDITOR
-				NGUITools.SetDirty(sp);
+				UnityEditor.EditorUtility.SetDirty(sp);
 #endif
 			}
 		}
@@ -370,7 +403,7 @@ public class UIAtlas : MonoBehaviour
 				font.atlas = null;
 				font.atlas = atl;
 #if UNITY_EDITOR
-				NGUITools.SetDirty(font);
+				UnityEditor.EditorUtility.SetDirty(font);
 #endif
 			}
 		}
@@ -381,71 +414,15 @@ public class UIAtlas : MonoBehaviour
 		{
 			UILabel lbl = labels[i];
 
-			if (lbl.bitmapFont != null && CheckIfRelated(this, lbl.bitmapFont.atlas))
+			if (lbl.font != null && CheckIfRelated(this, lbl.font.atlas))
 			{
-				UIFont font = lbl.bitmapFont;
-				lbl.bitmapFont = null;
-				lbl.bitmapFont = font;
+				UIFont font = lbl.font;
+				lbl.font = null;
+				lbl.font = font;
 #if UNITY_EDITOR
-				NGUITools.SetDirty(lbl);
+				UnityEditor.EditorUtility.SetDirty(lbl);
 #endif
 			}
 		}
-	}
-
-	/// <summary>
-	/// Performs an upgrade from the legacy way of specifying data to the new one.
-	/// </summary>
-
-	bool Upgrade ()
-	{
-		if (mReplacement) return mReplacement.Upgrade();
-
-		if (mSprites.Count == 0 && sprites.Count > 0 && material)
-		{
-			Texture tex = material.mainTexture;
-			int width = (tex != null) ? tex.width : 512;
-			int height = (tex != null) ? tex.height : 512;
-
-			for (int i = 0; i < sprites.Count; ++i)
-			{
-				Sprite old = sprites[i];
-				Rect outer = old.outer;
-				Rect inner = old.inner;
-				
-				if (mCoordinates == Coordinates.TexCoords)
-				{
-					NGUIMath.ConvertToPixels(outer, width, height, true);
-					NGUIMath.ConvertToPixels(inner, width, height, true);
-				}
-
-				UISpriteData sd = new UISpriteData();
-				sd.name = old.name;
-				
-				sd.x = Mathf.RoundToInt(outer.xMin);
-				sd.y = Mathf.RoundToInt(outer.yMin);
-				sd.width = Mathf.RoundToInt(outer.width);
-				sd.height = Mathf.RoundToInt(outer.height);
-				
-				sd.paddingLeft = Mathf.RoundToInt(old.paddingLeft * outer.width);
-				sd.paddingRight = Mathf.RoundToInt(old.paddingRight * outer.width);
-				sd.paddingBottom = Mathf.RoundToInt(old.paddingBottom * outer.height);
-				sd.paddingTop = Mathf.RoundToInt(old.paddingTop * outer.height);
-				
-				sd.borderLeft = Mathf.RoundToInt(inner.xMin - outer.xMin);
-				sd.borderRight = Mathf.RoundToInt(outer.xMax - inner.xMax);
-				sd.borderBottom = Mathf.RoundToInt(outer.yMax - inner.yMax);
-				sd.borderTop = Mathf.RoundToInt(inner.yMin - outer.yMin);
-
-				mSprites.Add(sd);
-			}
-			sprites.Clear();
-#if UNITY_EDITOR
-			NGUITools.SetDirty(this);
-			UnityEditor.AssetDatabase.SaveAssets();
-#endif
-			return true;
-		}
-		return false;
 	}
 }

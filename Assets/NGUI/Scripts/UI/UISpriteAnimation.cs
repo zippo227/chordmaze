@@ -1,6 +1,6 @@
 //----------------------------------------------
 //            NGUI: Next-Gen UI kit
-// Copyright © 2011-2014 Tasharen Entertainment
+// Copyright © 2011-2013 Tasharen Entertainment
 //----------------------------------------------
 
 using UnityEngine;
@@ -15,16 +15,15 @@ using System.Collections.Generic;
 [AddComponentMenu("NGUI/UI/Sprite Animation")]
 public class UISpriteAnimation : MonoBehaviour
 {
-	[HideInInspector][SerializeField] protected int mFPS = 30;
-	[HideInInspector][SerializeField] protected string mPrefix = "";
-	[HideInInspector][SerializeField] protected bool mLoop = true;
-	[HideInInspector][SerializeField] protected bool mSnap = true;
+	[HideInInspector][SerializeField] int mFPS = 30;
+	[HideInInspector][SerializeField] string mPrefix = "";
+	[HideInInspector][SerializeField] bool mLoop = true;
 
-	protected UISprite mSprite;
-	protected float mDelta = 0f;
-	protected int mIndex = 0;
-	protected bool mActive = true;
-	protected List<string> mSpriteNames = new List<string>();
+	UISprite mSprite;
+	float mDelta = 0f;
+	int mIndex = 0;
+	bool mActive = true;
+	List<string> mSpriteNames = new List<string>();
 
 	/// <summary>
 	/// Number of frames in the animation.
@@ -60,17 +59,17 @@ public class UISpriteAnimation : MonoBehaviour
 	/// Rebuild the sprite list first thing.
 	/// </summary>
 
-	protected virtual void Start () { RebuildSpriteList(); }
+	void Start () { RebuildSpriteList(); }
 
 	/// <summary>
 	/// Advance the sprite animation process.
 	/// </summary>
 
-	protected virtual void Update ()
+	void Update ()
 	{
 		if (mActive && mSpriteNames.Count > 1 && Application.isPlaying && mFPS > 0f)
 		{
-			mDelta += RealTime.deltaTime;
+			mDelta += Time.deltaTime;
 			float rate = 1f / mFPS;
 
 			if (rate < mDelta)
@@ -86,7 +85,7 @@ public class UISpriteAnimation : MonoBehaviour
 				if (mActive)
 				{
 					mSprite.spriteName = mSpriteNames[mIndex];
-					if (mSnap) mSprite.MakePixelPerfect();
+					mSprite.MakePixelPerfect();
 				}
 			}
 		}
@@ -96,18 +95,18 @@ public class UISpriteAnimation : MonoBehaviour
 	/// Rebuild the sprite list after changing the sprite name.
 	/// </summary>
 
-	public void RebuildSpriteList ()
+	void RebuildSpriteList ()
 	{
 		if (mSprite == null) mSprite = GetComponent<UISprite>();
 		mSpriteNames.Clear();
 
 		if (mSprite != null && mSprite.atlas != null)
 		{
-			List<UISpriteData> sprites = mSprite.atlas.spriteList;
+			List<UIAtlas.Sprite> sprites = mSprite.atlas.spriteList;
 
 			for (int i = 0, imax = sprites.Count; i < imax; ++i)
 			{
-				UISpriteData sprite = sprites[i];
+				UIAtlas.Sprite sprite = sprites[i];
 
 				if (string.IsNullOrEmpty(mPrefix) || sprite.name.StartsWith(mPrefix))
 				{
@@ -130,7 +129,7 @@ public class UISpriteAnimation : MonoBehaviour
 		if (mSprite != null && mSpriteNames.Count > 0)
 		{
 			mSprite.spriteName = mSpriteNames[mIndex];
-			if (mSnap) mSprite.MakePixelPerfect();
+			mSprite.MakePixelPerfect();
 		}
 	}
 }

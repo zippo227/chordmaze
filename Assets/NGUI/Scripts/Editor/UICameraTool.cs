@@ -1,6 +1,6 @@
 ﻿//----------------------------------------------
 //            NGUI: Next-Gen UI kit
-// Copyright © 2011-2014 Tasharen Entertainment
+// Copyright © 2011-2013 Tasharen Entertainment
 //----------------------------------------------
 
 using UnityEditor;
@@ -154,9 +154,9 @@ public class UICameraTool : EditorWindow
 
 	void OnGUI ()
 	{
-		NGUIEditorTools.SetLabelWidth(80f);
+		EditorGUIUtility.LookLikeControls(80f);
 
-		List<Camera> list = NGUIEditorTools.FindAll<Camera>();
+		List<Camera> list = NGUIEditorTools.FindInScene<Camera>();
 
 		if (list.Count > 0)
 		{

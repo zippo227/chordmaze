@@ -1,6 +1,6 @@
-//----------------------------------------------
+﻿//----------------------------------------------
 //            NGUI: Next-Gen UI kit
-// Copyright © 2011-2014 Tasharen Entertainment
+// Copyright © 2011-2013 Tasharen Entertainment
 //----------------------------------------------
 
 using UnityEngine;
@@ -11,7 +11,7 @@ using UnityEngine;
 
 [ExecuteInEditMode]
 [AddComponentMenu("NGUI/Interaction/Drag Camera")]
-public class UIDragCamera : MonoBehaviour
+public class UIDragCamera : IgnoreTimeScale
 {
 	/// <summary>
 	/// Target object that will be dragged.
@@ -19,13 +19,30 @@ public class UIDragCamera : MonoBehaviour
 
 	public UIDraggableCamera draggableCamera;
 
+	// Version 1.92 and earlier referenced the target and had properties specified on every drag script.
+	[HideInInspector][SerializeField] Component target;
+
 	/// <summary>
 	/// Automatically find the draggable camera if possible.
 	/// </summary>
 
 	void Awake ()
 	{
-		if (draggableCamera == null)
+		// Legacy functionality support for backwards compatibility
+		if (target != null)
+		{
+			if (draggableCamera == null)
+			{
+				draggableCamera = target.GetComponent<UIDraggableCamera>();
+
+				if (draggableCamera == null)
+				{
+					draggableCamera = target.gameObject.AddComponent<UIDraggableCamera>();
+				}
+			}
+			target = null;
+		}
+		else if (draggableCamera == null)
 		{
 			draggableCamera = NGUITools.FindInParents<UIDraggableCamera>(gameObject);
 		}

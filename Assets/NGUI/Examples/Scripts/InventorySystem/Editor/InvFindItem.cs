@@ -1,4 +1,4 @@
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 using System.Collections.Generic;
 
@@ -25,7 +25,7 @@ public class InvFindItem : ScriptableWizard
 	/// Add a menu option to display this wizard.
 	/// </summary>
 
-	[MenuItem("Window/Find Item #&i")]
+	[MenuItem("NGUI/Inventory Example/Find Item #&i")]
 	static void FindItem ()
 	{
 		ScriptableWizard.DisplayWizard<InvFindItem>("Find Item");
@@ -37,7 +37,7 @@ public class InvFindItem : ScriptableWizard
 
 	void OnGUI ()
 	{
-		NGUIEditorTools.SetLabelWidth(80f);
+		EditorGUIUtility.LookLikeControls(80f);
 		string newItemName = EditorGUILayout.TextField("Search for:", mItemName);
 		NGUIEditorTools.DrawSeparator();
 

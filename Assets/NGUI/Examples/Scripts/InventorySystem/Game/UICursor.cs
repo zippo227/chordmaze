@@ -1,6 +1,6 @@
 //----------------------------------------------
 //            NGUI: Next-Gen UI kit
-// Copyright © 2011-2014 Tasharen Entertainment
+// Copyright © 2011-2012 Tasharen Entertainment
 //----------------------------------------------
 
 using UnityEngine;
@@ -13,7 +13,7 @@ using UnityEngine;
 [AddComponentMenu("NGUI/Examples/UI Cursor")]
 public class UICursor : MonoBehaviour
 {
-	static public UICursor instance;
+	static UICursor mInstance;
 
 	// Camera used to draw this cursor
 	public Camera uiCamera;
@@ -28,8 +28,8 @@ public class UICursor : MonoBehaviour
 	/// Keep an instance reference so this class can be easily found.
 	/// </summary>
 
-	void Awake () { instance = this; }
-	void OnDestroy () { instance = null; }
+	void Awake () { mInstance = this; }
+	void OnDestroy () { mInstance = null; }
 
 	/// <summary>
 	/// Cache the expected components and starting values.
@@ -39,51 +39,43 @@ public class UICursor : MonoBehaviour
 	{
 		mTrans = transform;
 		mSprite = GetComponentInChildren<UISprite>();
-		
-		if (uiCamera == null)
-			uiCamera = NGUITools.FindCameraForLayer(gameObject.layer);
-		
-		if (mSprite != null)
-		{
-			mAtlas = mSprite.atlas;
-			mSpriteName = mSprite.spriteName;
-			if (mSprite.depth < 100) mSprite.depth = 100;
-		}
+		mAtlas = mSprite.atlas;
+		mSpriteName = mSprite.spriteName;
+		mSprite.depth = 100;
+		if (uiCamera == null) uiCamera = NGUITools.FindCameraForLayer(gameObject.layer);
 	}
 
 	/// <summary>
-	/// Reposition the widget.
+	/// Reposition the sprite.
 	/// </summary>
 
 	void Update ()
 	{
-		Vector3 pos = Input.mousePosition;
-
-		if (uiCamera != null)
+		if (mSprite.atlas != null)
 		{
-			// Since the screen can be of different than expected size, we want to convert
-			// mouse coordinates to view space, then convert that to world position.
-			pos.x = Mathf.Clamp01(pos.x / Screen.width);
-			pos.y = Mathf.Clamp01(pos.y / Screen.height);
-			mTrans.position = uiCamera.ViewportToWorldPoint(pos);
+			Vector3 pos = Input.mousePosition;
 
-			// For pixel-perfect results
-			if (uiCamera.isOrthoGraphic)
+			if (uiCamera != null)
 			{
-				Vector3 lp = mTrans.localPosition;
-				lp.x = Mathf.Round(lp.x);
-				lp.y = Mathf.Round(lp.y);
-				mTrans.localPosition = lp;
+				// Since the screen can be of different than expected size, we want to convert
+				// mouse coordinates to view space, then convert that to world position.
+				pos.x = Mathf.Clamp01(pos.x / Screen.width);
+				pos.y = Mathf.Clamp01(pos.y / Screen.height);
+				mTrans.position = uiCamera.ViewportToWorldPoint(pos);
+
+				// For pixel-perfect results
+				if (uiCamera.isOrthoGraphic)
+				{
+					mTrans.localPosition = NGUIMath.ApplyHalfPixelOffset(mTrans.localPosition, mTrans.localScale);
+				}
 			}
-		}
-		else
-		{
-			// Simple calculation that assumes that the camera is of fixed size
-			pos.x -= Screen.width * 0.5f;
-			pos.y -= Screen.height * 0.5f;
-			pos.x = Mathf.Round(pos.x);
-			pos.y = Mathf.Round(pos.y);
-			mTrans.localPosition = pos;
+			else
+			{
+				// Simple calculation that assumes that the camera is of fixed size
+				pos.x -= Screen.width * 0.5f;
+				pos.y -= Screen.height * 0.5f;
+				mTrans.localPosition = NGUIMath.ApplyHalfPixelOffset(pos, mTrans.localScale);
+			}
 		}
 	}
 
@@ -93,8 +85,7 @@ public class UICursor : MonoBehaviour
 
 	static public void Clear ()
 	{
-		if (instance != null && instance.mSprite != null)
-			Set(instance.mAtlas, instance.mSpriteName);
+		Set(mInstance.mAtlas, mInstance.mSpriteName);
 	}
 
 	/// <summary>
@@ -103,12 +94,12 @@ public class UICursor : MonoBehaviour
 
 	static public void Set (UIAtlas atlas, string sprite)
 	{
-		if (instance != null && instance.mSprite)
+		if (mInstance != null)
 		{
-			instance.mSprite.atlas = atlas;
-			instance.mSprite.spriteName = sprite;
-			instance.mSprite.MakePixelPerfect();
-			instance.Update();
+			mInstance.mSprite.atlas = atlas;
+			mInstance.mSprite.spriteName = sprite;
+			mInstance.mSprite.MakePixelPerfect();
+			mInstance.Update();
 		}
 	}
 }

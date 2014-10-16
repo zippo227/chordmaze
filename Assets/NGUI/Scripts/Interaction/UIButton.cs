@@ -1,10 +1,9 @@
 //----------------------------------------------
 //            NGUI: Next-Gen UI kit
-// Copyright © 2011-2014 Tasharen Entertainment
+// Copyright © 2011-2013 Tasharen Entertainment
 //----------------------------------------------
 
 using UnityEngine;
-using System.Collections.Generic;
 
 /// <summary>
 /// Similar to UIButtonColor, but adds a 'disabled' state based on whether the collider is enabled or not.
@@ -14,229 +13,70 @@ using System.Collections.Generic;
 public class UIButton : UIButtonColor
 {
 	/// <summary>
-	/// Current button that sent out the onClick event.
+	/// Color that will be applied when the button is disabled.
 	/// </summary>
 
-	static public UIButton current;
+	public Color disabledColor = Color.grey;
 
 	/// <summary>
-	/// Whether the button will highlight when you drag something over it.
+	/// If the collider is disabled, assume the disabled color.
 	/// </summary>
 
-	public bool dragHighlight = false;
+	protected override void OnEnable ()
+	{
+		if (isEnabled) base.OnEnable();
+		else UpdateColor(false, true);
+	}
 
-	/// <summary>
-	/// Name of the hover state sprite.
-	/// </summary>
-
-	public string hoverSprite;
-
-	/// <summary>
-	/// Name of the pressed sprite.
-	/// </summary>
-
-	public string pressedSprite;
-
-	/// <summary>
-	/// Name of the disabled sprite.
-	/// </summary>
-
-	public string disabledSprite;
-
-	/// <summary>
-	/// Whether the sprite changes will elicit a call to MakePixelPerfect() or not.
-	/// </summary>
-
-	public bool pixelSnap = false;
-
-	/// <summary>
-	/// Click event listener.
-	/// </summary>
-
-	public List<EventDelegate> onClick = new List<EventDelegate>();
-
-	// Cached value
-	[System.NonSerialized] string mNormalSprite;
-	[System.NonSerialized] UISprite mSprite;
+	public override void OnHover (bool isOver) { if (isEnabled) base.OnHover(isOver); }
+	public override void OnPress (bool isPressed) { if (isEnabled) base.OnPress(isPressed); }
 
 	/// <summary>
 	/// Whether the button should be enabled.
 	/// </summary>
 
-	public override bool isEnabled
+	public bool isEnabled
 	{
 		get
 		{
-			if (!enabled) return false;
 			Collider col = collider;
-			if (col && col.enabled) return true;
-#if !UNITY_3_5 && !UNITY_4_0 && !UNITY_4_1 && !UNITY_4_2
-			Collider2D c2d = GetComponent<Collider2D>();
-			return (c2d && c2d.enabled);
-#else
-			return false;
-#endif
+			return col && col.enabled;
 		}
 		set
 		{
-			if (isEnabled != value)
+			Collider col = collider;
+			if (!col) return;
+
+			if (col.enabled != value)
 			{
-				Collider col = collider;
-
-				if (col != null)
-				{
-					col.enabled = value;
-					SetState(value ? State.Normal : State.Disabled, false);
-				}
-#if !UNITY_3_5 && !UNITY_4_0 && !UNITY_4_1 && !UNITY_4_2
-				else
-				{
-					Collider2D c2d = GetComponent<Collider2D>();
-
-					if (c2d != null)
-					{
-						c2d.enabled = value;
-						SetState(value ? State.Normal : State.Disabled, false);
-					}
-					else enabled = value;
-				}
-#else
-				else enabled = value;
-#endif
+				col.enabled = value;
+				UpdateColor(value, false);
 			}
 		}
 	}
 
 	/// <summary>
-	/// Convenience function that changes the normal sprite.
+	/// Update the button's color to either enabled or disabled state.
 	/// </summary>
 
-	public string normalSprite
+	public void UpdateColor (bool shouldBeEnabled, bool immediate)
 	{
-		get
+		if (tweenTarget)
 		{
-			if (!mInitDone) OnInit();
-			return mNormalSprite;
-		}
-		set
-		{
-			if (mSprite != null && !string.IsNullOrEmpty(mNormalSprite) && mNormalSprite == mSprite.spriteName)
+			if (!mStarted)
 			{
-				mNormalSprite = value;
-				SetSprite(value);
-				NGUITools.SetDirty(mSprite);
+				mStarted = true;
+				Init();
 			}
-			else
+
+			Color c = shouldBeEnabled ? defaultColor : disabledColor;
+			TweenColor tc = TweenColor.Begin(tweenTarget, 0.15f, c);
+
+			if (immediate)
 			{
-				mNormalSprite = value;
-				if (mState == State.Normal) SetSprite(value);
+				tc.color = c;
+				tc.enabled = false;
 			}
-		}
-	}
-
-	/// <summary>
-	/// Cache the sprite we'll be working with.
-	/// </summary>
-
-	protected override void OnInit ()
-	{
-		base.OnInit();
-		mSprite = (mWidget as UISprite);
-		if (mSprite != null) mNormalSprite = mSprite.spriteName;
-	}
-
-	/// <summary>
-	/// Set the initial state.
-	/// </summary>
-
-	protected override void OnEnable ()
-	{
-#if UNITY_EDITOR
-		if (!Application.isPlaying)
-		{
-			mInitDone = false;
-			return;
-		}
-#endif
-		if (isEnabled)
-		{
-			if (mInitDone)
-			{
-				if (UICamera.currentScheme == UICamera.ControlScheme.Controller)
-				{
-					OnHover(UICamera.selectedObject == gameObject);
-				}
-				else if (UICamera.currentScheme == UICamera.ControlScheme.Mouse)
-				{
-					OnHover(UICamera.hoveredObject == gameObject);
-				}
-				else SetState(State.Normal, false);
-			}
-		}
-		else SetState(State.Disabled, true);
-	}
-
-	/// <summary>
-	/// Drag over state logic is a bit different for the button.
-	/// </summary>
-	
-	protected override void OnDragOver ()
-	{
-		if (isEnabled && (dragHighlight || UICamera.currentTouch.pressed == gameObject))
-			base.OnDragOver();
-	}
-
-	/// <summary>
-	/// Drag out state logic is a bit different for the button.
-	/// </summary>
-	
-	protected override void OnDragOut ()
-	{
-		if (isEnabled && (dragHighlight || UICamera.currentTouch.pressed == gameObject))
-			base.OnDragOut();
-	}
-
-	/// <summary>
-	/// Call the listener function.
-	/// </summary>
-
-	protected virtual void OnClick ()
-	{
-		if (current == null && isEnabled)
-		{
-			current = this;
-			EventDelegate.Execute(onClick);
-			current = null;
-		}
-	}
-
-	/// <summary>
-	/// Change the visual state.
-	/// </summary>
-
-	public override void SetState (State state, bool immediate)
-	{
-		base.SetState(state, immediate);
-
-		switch (state)
-		{
-			case State.Normal: SetSprite(mNormalSprite); break;
-			case State.Hover: SetSprite(hoverSprite); break;
-			case State.Pressed: SetSprite(pressedSprite); break;
-			case State.Disabled: SetSprite(disabledSprite); break;
-		}
-	}
-
-	/// <summary>
-	/// Convenience function that changes the sprite.
-	/// </summary>
-
-	protected void SetSprite (string sp)
-	{
-		if (mSprite != null && !string.IsNullOrEmpty(sp) && mSprite.spriteName != sp)
-		{
-			mSprite.spriteName = sp;
-			if (pixelSnap) mSprite.MakePixelPerfect();
 		}
 	}
 }

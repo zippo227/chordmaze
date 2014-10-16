@@ -6,7 +6,7 @@ public class ChordSelectButton : MonoBehaviour
 	public UISlider[] myStrings;
 	public int[] stringSettings;
 
-	public UIToggle[] myToggles;
+	public UICheckbox[] myToggles;
 	public bool[] playString;
 
 	public UILabel nameBox;

@@ -63,7 +63,7 @@ public class GuitarManager : MonoBehaviour {
 	public List<string> originalChords; //used to check if user is trying to make a new chord or use an original chord when adding to the progression
 
 	//these are references to the toggles and sliders that make up the guitar.
-	public UIToggle[] guitarStringsToPlay;
+	public UICheckbox[] guitarStringsToPlay;
 	public UISlider[] strings;
 	public NoteManager[] notes;
 
